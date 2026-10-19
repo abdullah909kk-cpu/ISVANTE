@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block title %}About Us | ISVANTE Horology Pakistan{% endblock %}
+
+{% block content %}
+<div class="container" style="padding-top: 4rem; padding-bottom: 7rem;">
+  
+  <div style="text-align: center; max-width: 760px; margin: 0 auto 5rem;">
+    <span class="section-subtitle">The Atelier & Vision</span>
+    <h1 class="section-title" style="font-size: clamp(2.2rem, 4vw, 3.4rem);">Crafted to Stand Out</h1>
+    <p style="font-size: 1.15rem; color: #d1d5db; line-height: 1.8;">
+      ISVANTE was founded with a singular conviction: to establish a Pakistani luxury horology house capable of standing shoulder-to-shoulder with the world's finest watchmakers.
+    </p>
+  </div>
+
+  <div class="story-grid" style="margin-bottom: 6rem;">
+    <div class="story-image-wrap">
+      <img src="{{ url_for('static', filename='images/hero_banner.jpg') }}" alt="ISVANTE Horology">
+    </div>
+
+    <div>
+      <h2 style="font-size: 2rem; margin-bottom: 1.25rem;">Rethinking Horology in Pakistan</h2>
+      <p style="margin-bottom: 1.2rem;">
+        In a marketplace saturated with fleeting fashion accessories and inflated markups, ISVANTE represents a return to substance. We reject flimsy pot metals and plastic crystals in favor of true heirloom horology.
+      </p>
+      <p style="margin-bottom: 1.2rem;">
+        Every ISVANTE timepiece starts with a block of solid <strong>316L surgical stainless steel</strong>, known for its hypoallergenic properties and deep luster. We glaze each watch with <strong>scratch-resistant sapphire crystal</strong> — virtually indestructible to everyday wear.
+      </p>
+      <p style="margin-bottom: 2rem;">
+        Underneath the dial lies precision mechanical and mecha-quartz calibers from legendary horological centers, regulated to maintain split-second chronometer timing.
+      </p>
+      <div style="display: flex; gap: 2rem; border-top: 1px solid var(--border-glass); padding-top: 1.5rem;">
+        <div>
+          <div style="font-size: 1.8rem; font-weight: 700; color: var(--gold-light);">316L</div>
+          <div style="font-size: 0.75rem; text-transform: uppercase; color: var(--text-muted);">Surgical Steel</div>
+        </div>
+        <div>
+          <div style="font-size: 1.8rem; font-weight: 700; color: var(--gold-light);">SAPPHIRE</div>
+          <div style="font-size: 0.75rem; text-transform: uppercase; color: var(--text-muted);">Mohs 9 Hardness</div>
+        </div>
+        <div>
+          <div style="font-size: 1.8rem; font-weight: 700; color: var(--gold-light);">1 YEAR</div>
+          <div style="font-size: 0.75rem; text-transform: uppercase; color: var(--text-muted);">Official Warranty</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Trust pillars -->
+  <div style="background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); padding: 4rem 3rem; text-align: center;">
+    <h3 style="font-size: 2rem; margin-bottom: 1rem;">The Pakistan Commitment</h3>
+    <p style="max-width: 680px; margin: 0 auto 3rem; color: #d1d5db;">
+      We believe true luxury begins with unwavering respect for our patrons. That is why we offer comprehensive Cash on Delivery, door-to-door courier verification, and immediate human concierge service on WhatsApp.
+    </p>
+
+    <div style="display: flex; justify-content: center; gap: 1.5rem; flex-wrap: wrap;">
+      <a href="/shop" class="btn btn-primary">Discover the Timepieces</a>
+      <a href="https://wa.me/{{ (settings.whatsapp_number or '+923001234567')|replace('+', '')|replace(' ', '') }}" target="_blank" class="btn btn-whatsapp">
+        Connect on WhatsApp
+      </a>
+    </div>
+  </div>
+
+</div>
+{% endblock %}

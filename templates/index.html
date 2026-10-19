@@ -1,0 +1,372 @@
+{% extends "base.html" %}
+
+{% block title %}ISVANTE | TIME, REDEFINED — Luxury Watches Pakistan{% endblock %}
+
+{% block content %}
+<!-- 1. Hero Section -->
+<section class="hero-section">
+  <div class="hero-bg-overlay"></div>
+  <img src="{{ url_for('static', filename='images/hero_banner.jpg') }}" 
+       alt="ISVANTE Luxury Chronograph Timepiece on Dark Slate" 
+       class="hero-bg-image">
+
+  <div class="container hero-content">
+    <div class="hero-pill">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+      Official Pakistan Launch Edition
+    </div>
+
+    <h1 class="hero-title">
+      TIME, <br><span class="gold-gradient-text">REDEFINED.</span>
+    </h1>
+
+    <p class="hero-text">
+      Discover refined watches designed to elevate every moment. Meticulously engineered with scratch-resistant sapphire crystal, 316L surgical stainless steel, and precision horology.
+    </p>
+
+    <div class="hero-buttons">
+      <a href="/shop" class="btn btn-primary">
+        Shop Watches
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </a>
+      <a href="#collections-section" class="btn btn-outline">
+        Explore Collections
+      </a>
+    </div>
+
+    <div class="hero-stats">
+      <div class="stat-item">
+        <h4>100%</h4>
+        <p>Quality Checked</p>
+      </div>
+      <div class="stat-item">
+        <h4>COD</h4>
+        <p>Nationwide in Pakistan</p>
+      </div>
+      <div class="stat-item">
+        <h4>1 YEAR</h4>
+        <p>Official Warranty</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 2. Featured Watches Section -->
+<section class="section" style="padding: 6rem 0;">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-subtitle">The Signature Collection</span>
+      <h2 class="section-title">Featured Timepieces</h2>
+      <p>Hand-selected horological masterworks blending commanding presence with fine mechanical finesse.</p>
+    </div>
+
+    <div class="product-grid">
+      {% for product in featured %}
+      <article class="product-card">
+        <div class="product-image-wrap">
+          <div class="product-badges">
+            {% if product.compare_at_price and product.compare_at_price > product.price %}
+              {% set pct = (((product.compare_at_price - product.price) / product.compare_at_price) * 100)|round|int %}
+              <span class="badge badge-sale">{{ pct }}% OFF</span>
+            {% endif %}
+            {% if product.is_new_arrival %}
+              <span class="badge badge-new">NEW</span>
+            {% endif %}
+            {% if product.is_bestseller %}
+              <span class="badge badge-bestseller">BESTSELLER</span>
+            {% endif %}
+          </div>
+
+          <button class="wishlist-btn" onclick="ISVANTE.toggleWishlist({id: {{ product.id }}, name: '{{ product.name }}', slug: '{{ product.slug }}', price: {{ product.price }}, main_image: '{{ product.main_image }}'}, this)" title="Add to Wishlist" aria-label="Add to Wishlist">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          </button>
+
+          <a href="/product/{{ product.slug }}" style="display: block; width: 100%; height: 100%;">
+            <img src="{{ product.main_image }}" alt="{{ product.name }}" class="product-image" loading="lazy">
+          </a>
+        </div>
+
+        <div class="product-body">
+          <span class="product-category-meta">{{ product.category_name or 'ISVANTE HOROLOGY' }}</span>
+          <h3 class="product-name">
+            <a href="/product/{{ product.slug }}">{{ product.name }}</a>
+          </h3>
+
+          <div class="product-rating">
+            <span>★★★★★</span>
+            <span class="review-count-text">({{ product.review_count or 18 }} reviews)</span>
+          </div>
+
+          <div class="product-price-row">
+            <span class="current-price">Rs. {{ "{:,.0f}".format(product.price) }}</span>
+            {% if product.compare_at_price and product.compare_at_price > product.price %}
+              <span class="compare-price">Rs. {{ "{:,.0f}".format(product.compare_at_price) }}</span>
+            {% endif %}
+          </div>
+
+          <div class="product-actions">
+            <button class="btn btn-outline btn-sm" onclick="ISVANTE.addToCart({id: {{ product.id }}, name: '{{ product.name }}', slug: '{{ product.slug }}', price: {{ product.price }}, main_image: '{{ product.main_image }}'}, 1, true)">
+              Add to Cart
+            </button>
+            <button class="btn btn-primary btn-sm" onclick="ISVANTE.buyNow({id: {{ product.id }}, name: '{{ product.name }}', slug: '{{ product.slug }}', price: {{ product.price }}, main_image: '{{ product.main_image }}'}, 1)">
+              Buy Now
+            </button>
+          </div>
+        </div>
+      </article>
+      {% endfor %}
+    </div>
+
+    <div style="text-align: center; margin-top: 3.5rem;">
+      <a href="/shop" class="btn btn-outline">
+        View Complete Catalog
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- 3. Shop by Collection -->
+<section id="collections-section" class="section" style="padding: 5rem 0; background: var(--bg-surface);">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-subtitle">Curated Horology</span>
+      <h2 class="section-title">Shop by Collection</h2>
+      <p>Explore distinct aesthetics tailored for dress wear, precision chronometry, and everyday endurance.</p>
+    </div>
+
+    <div class="collection-grid">
+      {% for col in collections %}
+      <a href="/shop?category={{ col.slug }}" class="collection-card">
+        <img src="{{ col.image_url }}" alt="{{ col.name }} Collection" class="collection-bg" loading="lazy">
+        <div class="collection-overlay"></div>
+        <div class="collection-info">
+          <h3 class="collection-name">{{ col.name }}</h3>
+          <p class="collection-desc">{{ col.description }}</p>
+          <span class="collection-link-text">
+            Explore Series
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </span>
+        </div>
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- 4. Why Choose ISVANTE -->
+<section class="features-section">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-subtitle">The ISVANTE Standard</span>
+      <h2 class="section-title">Why Discerning Clients Trust Us</h2>
+      <p>A Pakistani luxury watchmaker engineered on uncompromising trust, transparency, and superior horological value.</p>
+    </div>
+
+    <div class="features-grid">
+      <div class="feature-box">
+        <div class="feature-icon-wrap">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+        </div>
+        <h4>Cash on Delivery</h4>
+        <p>Zero upfront risk. Place your order online and pay upon physical arrival anywhere in Pakistan.</p>
+      </div>
+
+      <div class="feature-box">
+        <div class="feature-icon-wrap">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+        </div>
+        <h4>Nationwide Delivery</h4>
+        <p>Express 2 to 4 day shipping across Karachi, Lahore, Islamabad, Faisalabad, and 200+ towns.</p>
+      </div>
+
+      <div class="feature-box">
+        <div class="feature-icon-wrap">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 12 20 22 4 22 4 12"/><rect x="2" y="7" width="20" height="5"/><line x1="12" y1="22" x2="12" y2="7"/></svg>
+        </div>
+        <h4>Signature Luxury Box</h4>
+        <p>Delivered in an opulent ISVANTE black velvet presentation box with authenticity card & microfiber cloth.</p>
+      </div>
+
+      <div class="feature-box">
+        <div class="feature-icon-wrap">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        </div>
+        <h4>100% Quality Checked</h4>
+        <p>Each timepiece undergoes a 48-hour chronometer accuracy and pressure seal verification test.</p>
+      </div>
+
+      <div class="feature-box">
+        <div class="feature-icon-wrap">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+        </div>
+        <h4>Dedicated Concierge</h4>
+        <p>Instant personal assistance on WhatsApp for sizing guidance, delivery tracking, and inquiries.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 5. Best Sellers Modern Showcase -->
+<section class="section" style="padding: 6rem 0;">
+  <div class="container">
+    <div style="display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 3.5rem; flex-wrap: wrap; gap: 1.5rem;">
+      <div>
+        <span class="section-subtitle">Patron Favorites</span>
+        <h2 class="section-title" style="margin-bottom: 0;">Most Coveted Timepieces</h2>
+      </div>
+      <a href="/shop?sort=popularity" class="btn btn-outline btn-sm">
+        View All Bestsellers &rarr;
+      </a>
+    </div>
+
+    <div class="product-grid">
+      {% for product in bestsellers %}
+      <article class="product-card">
+        <div class="product-image-wrap">
+          <div class="product-badges">
+            <span class="badge badge-bestseller">BESTSELLER</span>
+            {% if product.compare_at_price and product.compare_at_price > product.price %}
+              {% set pct = (((product.compare_at_price - product.price) / product.compare_at_price) * 100)|round|int %}
+              <span class="badge badge-sale">{{ pct }}% OFF</span>
+            {% endif %}
+          </div>
+
+          <a href="/product/{{ product.slug }}" style="display: block; width: 100%; height: 100%;">
+            <img src="{{ product.main_image }}" alt="{{ product.name }}" class="product-image" loading="lazy">
+          </a>
+        </div>
+
+        <div class="product-body">
+          <span class="product-category-meta">{{ product.category_name }}</span>
+          <h3 class="product-name">
+            <a href="/product/{{ product.slug }}">{{ product.name }}</a>
+          </h3>
+          <div class="product-rating">
+            <span>★★★★★</span>
+            <span class="review-count-text">Verified Horology</span>
+          </div>
+          <div class="product-price-row">
+            <span class="current-price">Rs. {{ "{:,.0f}".format(product.price) }}</span>
+            {% if product.compare_at_price and product.compare_at_price > product.price %}
+              <span class="compare-price">Rs. {{ "{:,.0f}".format(product.compare_at_price) }}</span>
+            {% endif %}
+          </div>
+          <div class="product-actions">
+            <button class="btn btn-outline btn-sm" onclick="ISVANTE.addToCart({id: {{ product.id }}, name: '{{ product.name }}', slug: '{{ product.slug }}', price: {{ product.price }}, main_image: '{{ product.main_image }}'}, 1, true)">
+              Add to Cart
+            </button>
+            <button class="btn btn-primary btn-sm" onclick="ISVANTE.buyNow({id: {{ product.id }}, name: '{{ product.name }}', slug: '{{ product.slug }}', price: {{ product.price }}, main_image: '{{ product.main_image }}'}, 1)">
+              Buy Now
+            </button>
+          </div>
+        </div>
+      </article>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- 6. Brand Story Section -->
+<section class="story-section">
+  <div class="container">
+    <div class="story-grid">
+      <div class="story-image-wrap">
+        <img src="{{ url_for('static', filename='images/hero_banner.jpg') }}" alt="ISVANTE Craftsmanship">
+        <div class="story-badge-quote">
+          <p>"True luxury lies not in shouting for attention, but in commanding reverence through immaculate detail."</p>
+          <span style="font-size: 0.72rem; color: var(--gold-primary); text-transform: uppercase; letter-spacing: 0.15em; display: block; margin-top: 0.5rem;">— ISVANTE Atelier</span>
+        </div>
+      </div>
+
+      <div class="story-content">
+        <span class="section-subtitle">Born in Pakistan, Built for the World</span>
+        <h2 class="section-title">The ISVANTE Philosophy</h2>
+        <p style="margin-bottom: 1.5rem;">
+          For too long, the Pakistani watch market was dominated by generic dropshipping products or inaccessible foreign luxury brands. <strong>ISVANTE</strong> was conceived to bridge that divide: creating high-horology, heirloom-grade watches designed specifically for the discerning individual.
+        </p>
+        <p style="margin-bottom: 1.5rem;">
+          Every timepiece is built from solid <strong>316L surgical stainless steel</strong>, fitted with <strong>scratch-proof sapphire crystal glass</strong>, and driven by authentic <strong>Seiko and Miyota mechanical & mecha-quartz calibers</strong>.
+        </p>
+        <p style="margin-bottom: 2rem;">
+          Whether closing deals in Karachi or attending a formal soirée in Islamabad, an ISVANTE on your wrist is a declaration of intent — <strong style="color: var(--gold-light);">Crafted to Stand Out</strong>.
+        </p>
+        <div style="display: flex; gap: 1.5rem; align-items: center;">
+          <a href="/about" class="btn btn-primary">Read Our Story</a>
+          <a href="/shop" class="btn btn-outline">Explore Catalog</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 7. Customer Reviews Section -->
+<section class="reviews-section">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-subtitle">Discerning Voices</span>
+      <h2 class="section-title">Verified Patron Experiences</h2>
+      <p>Read real impressions from watch enthusiasts who placed Cash on Delivery orders across Pakistan.</p>
+    </div>
+
+    <div class="reviews-grid">
+      {% for rev in reviews %}
+      <div class="review-card">
+        <div class="review-stars">★★★★★</div>
+        <p class="review-text">“{{ rev.review_text }}”</p>
+        <div class="reviewer-meta">
+          <div>
+            <div class="reviewer-name">{{ rev.customer_name }}</div>
+            <div class="reviewer-city">{{ rev.city }}</div>
+          </div>
+          <span class="verified-pill">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+            Verified Buyer
+          </span>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- 8. Instagram & Social Section -->
+<section class="section" style="padding: 5rem 0;">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-subtitle">#ISVANTE</span>
+      <h2 class="section-title">On the Wrist Across Pakistan</h2>
+      <p>Follow our journey on Instagram <strong>@isvante.pk</strong> and tag your timepiece to be featured.</p>
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.25rem;">
+      <div style="position: relative; aspect-ratio: 1/1; border-radius: var(--radius-md); overflow: hidden; border: 1px solid var(--border-glass);">
+        <img src="{{ url_for('static', filename='images/chrono_sovereign.jpg') }}" alt="ISVANTE on wrist" style="width: 100%; height: 100%; object-fit: cover;">
+      </div>
+      <div style="position: relative; aspect-ratio: 1/1; border-radius: var(--radius-md); overflow: hidden; border: 1px solid var(--border-glass);">
+        <img src="{{ url_for('static', filename='images/royal_eclipse.jpg') }}" alt="ISVANTE on wrist" style="width: 100%; height: 100%; object-fit: cover;">
+      </div>
+      <div style="position: relative; aspect-ratio: 1/1; border-radius: var(--radius-md); overflow: hidden; border: 1px solid var(--border-glass);">
+        <img src="{{ url_for('static', filename='images/heritage_classic.jpg') }}" alt="ISVANTE on wrist" style="width: 100%; height: 100%; object-fit: cover;">
+      </div>
+      <div style="position: relative; aspect-ratio: 1/1; border-radius: var(--radius-md); overflow: hidden; border: 1px solid var(--border-glass);">
+        <img src="{{ url_for('static', filename='images/nautique_diver.jpg') }}" alt="ISVANTE on wrist" style="width: 100%; height: 100%; object-fit: cover;">
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 9. Newsletter Section -->
+<section class="newsletter-section">
+  <div class="container newsletter-box">
+    <span class="section-subtitle">Exclusive Access</span>
+    <h2 class="section-title">Join the ISVANTE Circle</h2>
+    <p>Subscribe to receive private invitations to limited batch drops, horological releases, and a Rs. 1,500 welcome voucher.</p>
+    
+    <form class="newsletter-form">
+      <input type="email" class="form-input" placeholder="Enter your email address" required aria-label="Email Address">
+      <button type="submit" class="btn btn-primary">Join Circle</button>
+    </form>
+  </div>
+</section>
+{% endblock %}

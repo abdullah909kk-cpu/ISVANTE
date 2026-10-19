@@ -1,0 +1,124 @@
+{% extends "base.html" %}
+
+{% block title %}Contact Concierge | ISVANTE Luxury Watches Pakistan{% endblock %}
+
+{% block content %}
+<div class="container" style="padding-top: 4rem; padding-bottom: 7rem;">
+  
+  <div style="text-align: center; max-width: 680px; margin: 0 auto 4rem;">
+    <span class="section-subtitle">Dedicated Client Relations</span>
+    <h1 class="section-title" style="font-size: 2.8rem;">Horology Concierge</h1>
+    <p>Whether you need wrist sizing recommendations, model availability verification, or custom gifting assistance, our team is at your command.</p>
+  </div>
+
+  <div style="display: grid; grid-template-columns: 1fr 1.3fr; gap: 4rem; align-items: start;" class="contact-grid">
+    
+    <!-- Contact Info Cards -->
+    <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+      
+      <!-- WhatsApp Direct Card -->
+      <div style="background: rgba(37,211,102,0.1); border: 1px solid rgba(37,211,102,0.3); border-radius: var(--radius-md); padding: 2rem;">
+        <div style="display: flex; align-items: center; gap: 0.8rem; margin-bottom: 0.8rem;">
+          <div style="width: 40px; height: 40px; background: #25d366; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff;">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.816 9.816 0 0 0 12.04 2z"/></svg>
+          </div>
+          <div>
+            <h4 style="font-size: 1.1rem; margin: 0;">Instant WhatsApp Concierge</h4>
+            <span style="font-size: 0.75rem; color: var(--color-success); font-weight: 600;">Fastest Response (Avg. 5 Mins)</span>
+          </div>
+        </div>
+        <p style="font-size: 0.88rem; color: #d1d5db; margin-bottom: 1.25rem;">
+          Inquire directly with our horology specialists regarding orders, stock availability, or payment confirmation.
+        </p>
+        <a href="https://wa.me/{{ (settings.whatsapp_number or '+923001234567')|replace('+', '')|replace(' ', '') }}?text=Hello%20ISVANTE,%20I%20would%20like%20to%20speak%20with%20a%20concierge." target="_blank" class="btn btn-whatsapp btn-block">
+          Open WhatsApp: {{ settings.whatsapp_number or '+92 300 1234567' }}
+        </a>
+      </div>
+
+      <!-- Phone & Email -->
+      <div style="background: var(--bg-surface); border: 1px solid var(--border-glass); border-radius: var(--radius-md); padding: 2rem;">
+        <h4 style="font-size: 1.1rem; margin-bottom: 1.25rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--gold-light);">Contact Dossier</h4>
+        
+        <div style="display: flex; flex-direction: column; gap: 1rem; font-size: 0.9rem;">
+          <div>
+            <span style="color: var(--text-muted); display: block; font-size: 0.75rem; text-transform: uppercase;">Direct Line</span>
+            <strong>{{ settings.contact_phone or '+92 300 1234567' }}</strong>
+          </div>
+          <div>
+            <span style="color: var(--text-muted); display: block; font-size: 0.75rem; text-transform: uppercase;">Concierge Email</span>
+            <strong>{{ settings.contact_email or 'concierge@isvante.com' }}</strong>
+          </div>
+          <div>
+            <span style="color: var(--text-muted); display: block; font-size: 0.75rem; text-transform: uppercase;">Atelier Location</span>
+            <strong>{{ settings.store_address or 'ISVANTE Horology Studio, Gulberg III, Lahore, Pakistan' }}</strong>
+          </div>
+          <div>
+            <span style="color: var(--text-muted); display: block; font-size: 0.75rem; text-transform: uppercase;">Operating Hours</span>
+            <strong>Monday – Saturday: 10:00 AM – 10:00 PM PKT</strong>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Contact Form -->
+    <div style="background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 2.5rem;">
+      <h3 style="font-size: 1.5rem; margin-bottom: 0.5rem;">Send an Inquiry</h3>
+      <p style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 2rem;">Our horology desk replies to all correspondence within 4 hours.</p>
+
+      <form id="contact-form" onsubmit="handleContactSubmit(event)">
+        <div style="display: flex; flex-direction: column; gap: 1.25rem;">
+          <div>
+            <label style="font-size: 0.82rem; color: var(--text-secondary); display: block; margin-bottom: 0.4rem;">Your Full Name *</label>
+            <input type="text" name="name" class="form-input" placeholder="e.g. Asad Ali" required>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div>
+              <label style="font-size: 0.82rem; color: var(--text-secondary); display: block; margin-bottom: 0.4rem;">Mobile Phone / WhatsApp *</label>
+              <input type="tel" name="phone" class="form-input" placeholder="0300-1234567" required>
+            </div>
+            <div>
+              <label style="font-size: 0.82rem; color: var(--text-secondary); display: block; margin-bottom: 0.4rem;">Email Address *</label>
+              <input type="email" name="email" class="form-input" placeholder="asad@example.com" required>
+            </div>
+          </div>
+
+          <div>
+            <label style="font-size: 0.82rem; color: var(--text-secondary); display: block; margin-bottom: 0.4rem;">Subject *</label>
+            <select name="subject" class="form-input">
+              <option value="Product Availability & Sizing">Product Availability & Sizing</option>
+              <option value="Cash on Delivery Query">Cash on Delivery Query</option>
+              <option value="Order Tracking Update">Order Tracking Update</option>
+              <option value="Corporate / Bulk Gifting">Corporate / Bulk Gifting</option>
+              <option value="Warranty / Exchange">Warranty / Exchange</option>
+            </select>
+          </div>
+
+          <div>
+            <label style="font-size: 0.82rem; color: var(--text-secondary); display: block; margin-bottom: 0.4rem;">Your Message *</label>
+            <textarea name="message" rows="4" class="form-input" placeholder="How may we serve your horological requirements?" required></textarea>
+          </div>
+
+          <button type="submit" class="btn btn-primary" style="padding: 1rem;">
+            Transmit Message to Concierge
+          </button>
+        </div>
+      </form>
+    </div>
+
+  </div>
+
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  function handleContactSubmit(e) {
+    e.preventDefault();
+    const form = e.target;
+    ISVANTE.showToast('Your message has been received by our concierge. We will reach you shortly.');
+    form.reset();
+  }
+</script>
+{% endblock %}

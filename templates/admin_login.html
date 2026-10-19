@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Staff Portal Login | ISVANTE Horology</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/isvante_logo_circle.png') }}">
+</head>
+<body style="min-height: 100vh; display: flex; align-items: center; justify-content: center; background: radial-gradient(circle at 50% 50%, #171722 0%, #09090b 80%); padding: 1.5rem;">
+
+  <div style="width: 100%; max-width: 420px; background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); padding: 3rem 2.5rem; box-shadow: var(--shadow-lg), var(--shadow-gold); text-align: center;">
+    
+    <div style="margin-bottom: 2rem;">
+      <img src="{{ url_for('static', filename='images/isvante_logo_circle.png') }}" alt="ISVANTE" style="width: 76px; height: 76px; border-radius: 50%; margin: 0 auto 1rem; border: 1px solid var(--border-subtle); box-shadow: 0 0 20px rgba(212,175,55,0.3);">
+      <h2 style="font-family: var(--font-serif); font-size: 1.6rem; letter-spacing: 0.15em; margin-bottom: 0.2rem;">ISVANTE</h2>
+      <span style="font-size: 0.72rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--gold-light);">Atelier Management Portal</span>
+    </div>
+
+    {% if error %}
+      <div style="background: rgba(239,68,68,0.15); border: 1px solid rgba(239,68,68,0.4); border-radius: var(--radius-sm); padding: 0.75rem 1rem; color: #fca5a5; font-size: 0.85rem; margin-bottom: 1.5rem; text-align: left;">
+        {{ error }}
+      </div>
+    {% endif %}
+
+    <form method="POST" action="/admin/login" style="display: flex; flex-direction: column; gap: 1.25rem; text-align: left;">
+      <div>
+        <label style="font-size: 0.8rem; color: var(--text-secondary); display: block; margin-bottom: 0.4rem;">Administrator Username</label>
+        <input type="text" name="username" class="form-input" placeholder="admin" required autofocus>
+      </div>
+
+      <div>
+        <label style="font-size: 0.8rem; color: var(--text-secondary); display: block; margin-bottom: 0.4rem;">Security Password</label>
+        <input type="password" name="password" class="form-input" placeholder="••••••••••••" required>
+      </div>
+
+      <button type="submit" class="btn btn-primary btn-block" style="padding: 0.95rem; margin-top: 0.5rem;">
+        Authenticate Session
+      </button>
+
+      <div style="text-align: center; margin-top: 1rem;">
+        <a href="/" style="font-size: 0.8rem; color: var(--text-muted);">&larr; Return to Public Storefront</a>
+      </div>
+    </form>
+    
+    <div style="margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid var(--border-glass); font-size: 0.75rem; color: var(--text-muted);">
+      Default Credentials: <code>admin</code> / <code>isvantepakistan</code>
+    </div>
+
+  </div>
+
+</body>
+</html>

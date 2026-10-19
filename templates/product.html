@@ -1,0 +1,372 @@
+{% extends "base.html" %}
+
+{% block title %}{{ product.name }} | ISVANTE Luxury Watches Pakistan{% endblock %}
+{% block meta_description %}{{ product.short_description }} Cash on Delivery available across Pakistan with 1-Year Official Warranty.{% endblock %}
+
+{% block content %}
+<div class="container" style="padding-top: 3rem; padding-bottom: 6rem;">
+  
+  <!-- Breadcrumbs -->
+  <nav style="display: flex; gap: 0.6rem; font-size: 0.82rem; color: var(--text-muted); margin-bottom: 2.5rem; align-items: center;" aria-label="Breadcrumb">
+    <a href="/">Home</a> <span>/</span>
+    <a href="/shop">Shop</a> <span>/</span>
+    <a href="/shop?category={{ product.category_slug }}">{{ product.category_name }}</a> <span>/</span>
+    <span style="color: var(--gold-light);">{{ product.name }}</span>
+  </nav>
+
+  <!-- Product Main Showcase -->
+  <div style="display: grid; grid-template-columns: 1.1fr 1fr; gap: 4rem; align-items: start; margin-bottom: 5rem;" class="product-detail-grid">
+    
+    <!-- Image Gallery with Zoom & Thumbnails -->
+    <div>
+      <div style="position: relative; aspect-ratio: 1/1; background: #111116; border: 1px solid var(--border-glass); border-radius: var(--radius-md); overflow: hidden; margin-bottom: 1rem; cursor: zoom-in;" id="main-gallery-view">
+        <img id="primary-product-image" src="{{ product.main_image }}" alt="{{ product.name }}" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s ease;">
+        
+        <!-- Sale Badge -->
+        {% if product.compare_at_price and product.compare_at_price > product.price %}
+          {% set pct = (((product.compare_at_price - product.price) / product.compare_at_price) * 100)|round|int %}
+          <div style="position: absolute; top: 1.25rem; left: 1.25rem;">
+            <span class="badge badge-sale" style="font-size: 0.8rem; padding: 0.35rem 0.8rem;">SAVE {{ pct }}%</span>
+          </div>
+        {% endif %}
+      </div>
+
+      <!-- Thumbnail Selector -->
+      <div style="display: flex; gap: 0.75rem; overflow-x: auto;">
+        {% for img_url in product.gallery %}
+          <button type="button" class="gallery-thumb-btn {% if loop.first %}active{% endif %}" onclick="changeGalleryImage('{{ img_url }}', this)" style="border: 2px solid {% if loop.first %}var(--gold-primary){% else %}var(--border-glass){% endif %}; background: #111; border-radius: var(--radius-sm); padding: 2px; width: 80px; height: 80px; cursor: pointer; flex-shrink: 0;">
+            <img src="{{ img_url }}" alt="Thumbnail view" style="width: 100%; height: 100%; object-fit: cover; border-radius: 2px;">
+          </button>
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- Product Purchase Details -->
+    <div>
+      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.5rem;">
+        <span class="product-category-meta" style="font-size: 0.85rem;">{{ product.category_name }}</span>
+        <span style="font-size: 0.78rem; color: var(--text-muted); font-family: monospace;">SKU: {{ product.sku }}</span>
+      </div>
+
+      <h1 style="font-size: clamp(2rem, 3.2vw, 2.8rem); line-height: 1.15; margin-bottom: 0.8rem;">
+        {{ product.name }}
+      </h1>
+
+      <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem;">
+        <div style="display: flex; align-items: center; gap: 0.4rem; color: #fbbf24; font-size: 0.95rem;">
+          <span>★★★★★</span>
+          <span style="color: var(--text-secondary); font-size: 0.85rem;">({{ product.review_count or 14 }} Verified Reviews)</span>
+        </div>
+        <span style="color: var(--border-glass);">|</span>
+        <span style="color: var(--color-success); font-size: 0.85rem; font-weight: 600;">
+          ✓ {{ product.stock }} Units In Stock (Pakistan Dispatch)
+        </span>
+      </div>
+
+      <!-- Pricing Block -->
+      <div style="display: flex; align-items: baseline; gap: 1.25rem; padding: 1.25rem; background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); margin-bottom: 2rem;">
+        <span style="font-size: 2.2rem; font-weight: 700; color: var(--gold-light);">
+          Rs. {{ "{:,.0f}".format(product.price) }}
+        </span>
+        {% if product.compare_at_price and product.compare_at_price > product.price %}
+          <span style="font-size: 1.15rem; color: var(--text-muted); text-decoration: line-through;">
+            Rs. {{ "{:,.0f}".format(product.compare_at_price) }}
+          </span>
+          <span style="font-size: 0.8rem; color: var(--color-sale); font-weight: 700; background: rgba(239, 68, 68, 0.15); padding: 0.2rem 0.6rem; border-radius: var(--radius-sm);">
+            Save Rs. {{ "{:,.0f}".format(product.compare_at_price - product.price) }}
+          </span>
+        {% endif %}
+      </div>
+
+      <!-- Short Description -->
+      <p style="font-size: 1rem; line-height: 1.7; margin-bottom: 2rem;">
+        {{ product.description }}
+      </p>
+
+      <!-- Key Highlights Pills -->
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-bottom: 2rem; font-size: 0.82rem;">
+        <div style="background: rgba(255,255,255,0.03); padding: 0.6rem 0.9rem; border-radius: var(--radius-sm); border: 1px solid var(--border-glass);">
+          <strong style="color: var(--gold-light);">Movement:</strong> {{ product.movement }}
+        </div>
+        <div style="background: rgba(255,255,255,0.03); padding: 0.6rem 0.9rem; border-radius: var(--radius-sm); border: 1px solid var(--border-glass);">
+          <strong style="color: var(--gold-light);">Glass:</strong> {{ product.glass_material }}
+        </div>
+        <div style="background: rgba(255,255,255,0.03); padding: 0.6rem 0.9rem; border-radius: var(--radius-sm); border: 1px solid var(--border-glass);">
+          <strong style="color: var(--gold-light);">Water Resistance:</strong> {{ product.water_resistance }}
+        </div>
+        <div style="background: rgba(255,255,255,0.03); padding: 0.6rem 0.9rem; border-radius: var(--radius-sm); border: 1px solid var(--border-glass);">
+          <strong style="color: var(--gold-light);">Warranty:</strong> 1 Year Official
+        </div>
+      </div>
+
+      <!-- Quantity & Purchase Actions -->
+      <div style="display: flex; gap: 1rem; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap;">
+        <!-- Quantity -->
+        <div class="qty-controls" style="background: var(--bg-surface); padding: 0.3rem;">
+          <button type="button" class="qty-btn" onclick="alterProductQty(-1)" style="width: 36px; height: 36px; font-size: 1.1rem;">−</button>
+          <span id="product-qty-val" style="width: 40px; text-align: center; font-weight: 600;">1</span>
+          <button type="button" class="qty-btn" onclick="alterProductQty(1)" style="width: 36px; height: 36px; font-size: 1.1rem;">+</button>
+        </div>
+
+        <button type="button" class="btn btn-outline" style="flex: 1; min-width: 160px;" onclick="addCurrentProduct(false)">
+          Add to Cart
+        </button>
+
+        <button type="button" class="btn btn-primary" style="flex: 1.2; min-width: 180px;" onclick="addCurrentProduct(true)">
+          Buy Now (COD)
+        </button>
+      </div>
+
+      <!-- Direct WhatsApp Inquire Button -->
+      <a href="{{ whatsapp_product_link }}" target="_blank" rel="noopener noreferrer" class="btn btn-whatsapp btn-block" style="margin-bottom: 2rem;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.816 9.816 0 0 0 12.04 2z"/></svg>
+        Chat on WhatsApp About This Watch
+      </a>
+
+      <!-- Pakistan Trust Perks Box -->
+      <div style="border-top: 1px solid var(--border-glass); padding-top: 1.5rem; display: flex; flex-direction: column; gap: 0.8rem; font-size: 0.85rem; color: var(--text-secondary);">
+        <div style="display: flex; gap: 0.75rem; align-items: center;">
+          <span style="color: var(--color-success); font-weight: 700;">✓</span>
+          <span><strong>Cash on Delivery:</strong> Pay only when you receive your parcel anywhere in Pakistan.</span>
+        </div>
+        <div style="display: flex; gap: 0.75rem; align-items: center;">
+          <span style="color: var(--color-success); font-weight: 700;">✓</span>
+          <span><strong>Express Courier:</strong> Dispatched via Trax / TCS with door-to-door tracking.</span>
+        </div>
+        <div style="display: flex; gap: 0.75rem; align-items: center;">
+          <span style="color: var(--color-success); font-weight: 700;">✓</span>
+          <span><strong>7-Day Replacement Guarantee:</strong> Hassle-free exchanges for ultimate confidence.</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Specifications Table & Information Tabs -->
+  <div style="background: var(--bg-surface); border: 1px solid var(--border-glass); border-radius: var(--radius-lg); padding: 3rem; margin-bottom: 5rem;">
+    <h3 style="font-size: 1.8rem; margin-bottom: 2rem; text-align: center;">Horological Specifications</h3>
+    
+    <div style="max-width: 800px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; font-size: 0.95rem;">
+      <div style="padding: 1rem; border-bottom: 1px solid var(--border-glass);">
+        <span style="color: var(--text-muted); display: block; font-size: 0.8rem; text-transform: uppercase; margin-bottom: 0.2rem;">Caliber / Movement</span>
+        <strong>{{ product.movement }}</strong>
+      </div>
+      <div style="padding: 1rem; border-bottom: 1px solid var(--border-glass);">
+        <span style="color: var(--text-muted); display: block; font-size: 0.8rem; text-transform: uppercase; margin-bottom: 0.2rem;">Case Material</span>
+        <strong>{{ product.case_material }}</strong>
+      </div>
+      <div style="padding: 1rem; border-bottom: 1px solid var(--border-glass);">
+        <span style="color: var(--text-muted); display: block; font-size: 0.8rem; text-transform: uppercase; margin-bottom: 0.2rem;">Crystal / Glass</span>
+        <strong>{{ product.glass_material }}</strong>
+      </div>
+      <div style="padding: 1rem; border-bottom: 1px solid var(--border-glass);">
+        <span style="color: var(--text-muted); display: block; font-size: 0.8rem; text-transform: uppercase; margin-bottom: 0.2rem;">Dial Dimensions</span>
+        <strong>{{ product.dial_size }}</strong>
+      </div>
+      <div style="padding: 1rem; border-bottom: 1px solid var(--border-glass);">
+        <span style="color: var(--text-muted); display: block; font-size: 0.8rem; text-transform: uppercase; margin-bottom: 0.2rem;">Water Resistance</span>
+        <strong>{{ product.water_resistance }}</strong>
+      </div>
+      <div style="padding: 1rem; border-bottom: 1px solid var(--border-glass);">
+        <span style="color: var(--text-muted); display: block; font-size: 0.8rem; text-transform: uppercase; margin-bottom: 0.2rem;">Strap & Clasp</span>
+        <strong>{{ product.strap_material }}</strong>
+      </div>
+      <div style="padding: 1rem; border-bottom: 1px solid var(--border-glass);">
+        <span style="color: var(--text-muted); display: block; font-size: 0.8rem; text-transform: uppercase; margin-bottom: 0.2rem;">Warranty</span>
+        <strong>{{ product.warranty }}</strong>
+      </div>
+      <div style="padding: 1rem; border-bottom: 1px solid var(--border-glass);">
+        <span style="color: var(--text-muted); display: block; font-size: 0.8rem; text-transform: uppercase; margin-bottom: 0.2rem;">Color Profile</span>
+        <strong>{{ product.color }}</strong>
+      </div>
+    </div>
+  </div>
+
+  <!-- Customer Reviews for this Watch -->
+  <div style="margin-bottom: 6rem;">
+    <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 3rem; flex-wrap: wrap; gap: 1.5rem;">
+      <div>
+        <span class="section-subtitle">Owner Reviews</span>
+        <h3 style="font-size: 2rem;">Client Testimonials ({{ product.reviews|length }})</h3>
+      </div>
+      <button type="button" class="btn btn-outline btn-sm" onclick="toggleReviewModal()">
+        Write a Review
+      </button>
+    </div>
+
+    <div class="reviews-grid">
+      {% for rev in product.reviews %}
+      <div class="review-card">
+        <div class="review-stars">
+          {% for i in range(rev.rating) %}★{% endfor %}
+        </div>
+        <p class="review-text">“{{ rev.review_text }}”</p>
+        <div class="reviewer-meta">
+          <div>
+            <div class="reviewer-name">{{ rev.customer_name }}</div>
+            <div class="reviewer-city">{{ rev.city }}</div>
+          </div>
+          <span class="verified-pill">✓ Verified Owner</span>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+
+    <!-- Review Submission Form Drawer / Inline -->
+    <div id="review-form-wrap" style="display: none; background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 2.5rem; margin-top: 3rem; max-width: 700px;">
+      <h4 style="font-size: 1.3rem; margin-bottom: 1rem;">Share Your Experience</h4>
+      <form id="submit-review-form" onsubmit="handleReviewSubmit(event)">
+        <input type="hidden" name="product_id" value="{{ product.id }}">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+          <input type="text" name="customer_name" class="form-input" placeholder="Your Name" required>
+          <input type="text" name="city" class="form-input" placeholder="Your City (e.g. Lahore, Karachi)" required>
+        </div>
+        <div style="margin-bottom: 1rem;">
+          <label style="font-size: 0.85rem; color: var(--text-secondary); display: block; margin-bottom: 0.4rem;">Rating</label>
+          <select name="rating" class="form-input">
+            <option value="5">★★★★★ (5 Stars - Exceptional)</option>
+            <option value="4">★★★★☆ (4 Stars - High Quality)</option>
+            <option value="3">★★★☆☆ (3 Stars - Average)</option>
+          </select>
+        </div>
+        <div style="margin-bottom: 1.5rem;">
+          <textarea name="review_text" rows="4" class="form-input" placeholder="Describe the finishing, wrist feel, and delivery experience..." required></textarea>
+        </div>
+        <div style="display: flex; gap: 1rem;">
+          <button type="submit" class="btn btn-primary">Submit Review</button>
+          <button type="button" class="btn btn-outline" onclick="toggleReviewModal()">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Related Timepieces -->
+  <div>
+    <div class="section-header">
+      <span class="section-subtitle">Complementary Horology</span>
+      <h3 class="section-title" style="font-size: 2.2rem;">You May Also Admire</h3>
+    </div>
+
+    <div class="product-grid">
+      {% for rel in related %}
+      <article class="product-card">
+        <div class="product-image-wrap">
+          <a href="/product/{{ rel.slug }}" style="display: block; width: 100%; height: 100%;">
+            <img src="{{ rel.main_image }}" alt="{{ rel.name }}" class="product-image" loading="lazy">
+          </a>
+        </div>
+        <div class="product-body">
+          <span class="product-category-meta">{{ rel.category_name }}</span>
+          <h4 class="product-name">
+            <a href="/product/{{ rel.slug }}">{{ rel.name }}</a>
+          </h4>
+          <div class="product-price-row">
+            <span class="current-price">Rs. {{ "{:,.0f}".format(rel.price) }}</span>
+          </div>
+          <a href="/product/{{ rel.slug }}" class="btn btn-outline btn-sm btn-block">
+            View Timepiece
+          </a>
+        </div>
+      </article>
+      {% endfor %}
+    </div>
+  </div>
+
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  let currentProduct = {
+    id: {{ product.id }},
+    name: {{ product.name|tojson }},
+    slug: {{ product.slug|tojson }},
+    price: {{ product.price }},
+    main_image: {{ product.main_image|tojson }}
+  };
+  let currentQty = 1;
+
+  function alterProductQty(delta) {
+    currentQty = Math.max(1, currentQty + delta);
+    document.getElementById('product-qty-val').textContent = currentQty;
+  }
+
+  function changeGalleryImage(src, btn) {
+    const mainImg = document.getElementById('primary-product-image');
+    if (mainImg) {
+      mainImg.src = src;
+    }
+    document.querySelectorAll('.gallery-thumb-btn').forEach(b => {
+      b.style.borderColor = 'var(--border-glass)';
+    });
+    if (btn) {
+      btn.style.borderColor = 'var(--gold-primary)';
+    }
+  }
+
+  function addCurrentProduct(isBuyNow) {
+    if (isBuyNow) {
+      ISVANTE.buyNow(currentProduct, currentQty);
+    } else {
+      ISVANTE.addToCart(currentProduct, currentQty, true);
+    }
+  }
+
+  function toggleReviewModal() {
+    const wrap = document.getElementById('review-form-wrap');
+    if (wrap) {
+      wrap.style.display = wrap.style.display === 'none' ? 'block' : 'none';
+      if (wrap.style.display === 'block') {
+        wrap.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+  }
+
+  async function handleReviewSubmit(e) {
+    e.preventDefault();
+    const form = e.target;
+    const payload = {
+      product_id: parseInt(form.product_id.value),
+      customer_name: form.customer_name.value.trim(),
+      city: form.city.value.trim(),
+      rating: parseInt(form.rating.value),
+      review_text: form.review_text.value.trim()
+    };
+
+    try {
+      const res = await fetch('/api/reviews', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      const data = await res.json();
+      if (data.success) {
+        ISVANTE.showToast(data.message);
+        form.reset();
+        toggleReviewModal();
+      } else {
+        ISVANTE.showToast(data.error || 'Failed to submit review', 'error');
+      }
+    } catch (err) {
+      ISVANTE.showToast('Network error while submitting review', 'error');
+    }
+  }
+
+  // Interactive zoom on hover
+  const galleryView = document.getElementById('main-gallery-view');
+  const mainImg = document.getElementById('primary-product-image');
+  if (galleryView && mainImg) {
+    galleryView.addEventListener('mousemove', (e) => {
+      const rect = galleryView.getBoundingClientRect();
+      const x = ((e.clientX - rect.left) / rect.width) * 100;
+      const y = ((e.clientY - rect.top) / rect.height) * 100;
+      mainImg.style.transformOrigin = `${x}% ${y}%`;
+      mainImg.style.transform = 'scale(1.5)';
+    });
+    galleryView.addEventListener('mouseleave', () => {
+      mainImg.style.transform = 'scale(1)';
+      mainImg.style.transformOrigin = 'center';
+    });
+  }
+</script>
+{% endblock %}

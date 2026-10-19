@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+
+{% block title %}Store Policies & FAQ | ISVANTE Horology Pakistan{% endblock %}
+
+{% block content %}
+<div class="container" style="padding-top: 4rem; padding-bottom: 7rem; max-width: 900px;">
+  
+  <div style="text-align: center; margin-bottom: 3.5rem;">
+    <span class="section-subtitle">Transparency & Operational Integrity</span>
+    <h1 class="section-title" style="font-size: 2.8rem;">ISVANTE Policies & Guidance</h1>
+  </div>
+
+  <!-- Policy Navigation Tabs -->
+  <div style="display: flex; gap: 0.5rem; justify-content: center; flex-wrap: wrap; margin-bottom: 3.5rem; border-bottom: 1px solid var(--border-glass); padding-bottom: 1rem;">
+    <a href="/policies/shipping" class="btn btn-sm {% if active_policy == 'shipping' %}btn-primary{% else %}btn-outline{% endif %}">
+      Shipping & COD
+    </a>
+    <a href="/policies/returns" class="btn btn-sm {% if active_policy == 'returns' %}btn-primary{% else %}btn-outline{% endif %}">
+      7-Day Returns & Exchanges
+    </a>
+    <a href="/policies/faqs" class="btn btn-sm {% if active_policy == 'faqs' %}btn-primary{% else %}btn-outline{% endif %}">
+      Frequently Asked Questions
+    </a>
+    <a href="/policies/privacy" class="btn btn-sm {% if active_policy == 'privacy' %}btn-primary{% else %}btn-outline{% endif %}">
+      Privacy Policy
+    </a>
+    <a href="/policies/terms" class="btn btn-sm {% if active_policy == 'terms' %}btn-primary{% else %}btn-outline{% endif %}">
+      Terms & Conditions
+    </a>
+  </div>
+
+  <div style="background: var(--bg-surface); border: 1px solid var(--border-glass); border-radius: var(--radius-lg); padding: 3rem; line-height: 1.8; color: #d1d5db;">
+    
+    {% if active_policy == 'shipping' %}
+      <h2 style="color: var(--gold-light); font-size: 1.8rem; margin-bottom: 1.5rem;">Nationwide Shipping & Cash on Delivery (Pakistan)</h2>
+      
+      <h4 style="color: var(--text-primary); margin-top: 1.5rem; margin-bottom: 0.5rem;">1. Cash on Delivery (COD) Coverage</h4>
+      <p>
+        Cash on Delivery is available across all 4 provinces of Pakistan (Punjab, Sindh, Khyber Pakhtunkhwa, Balochistan) as well as the Islamabad Capital Territory, Azad Jammu & Kashmir, and Gilgit-Baltistan. You pay only when the rider delivers your timepiece to your hands.
+      </p>
+
+      <h4 style="color: var(--text-primary); margin-top: 1.5rem; margin-bottom: 0.5rem;">2. Delivery Timelines</h4>
+      <p>
+        - <strong>Lahore, Karachi, Islamabad, Rawalpindi:</strong> 2 to 3 business days.<br>
+        - <strong>Other Cities & Towns:</strong> 3 to 4 business days.<br>
+        Orders placed before 4:00 PM PKT are quality-verified and dispatched the very same business day.
+      </p>
+
+      <h4 style="color: var(--text-primary); margin-top: 1.5rem; margin-bottom: 0.5rem;">3. Shipping Charges & Free Threshold</h4>
+      <p>
+        Standard nationwide courier dispatch is fixed at <strong>Rs. {{ settings.shipping_fee or '250' }}</strong>. Orders totaling <strong>Rs. {{ settings.free_shipping_threshold or '5,000' }}</strong> or greater qualify for <strong>Complimentary FREE Nationwide Shipping</strong>.
+      </p>
+
+      <h4 style="color: var(--text-primary); margin-top: 1.5rem; margin-bottom: 0.5rem;">4. Packaging & Inspection</h4>
+      <p>
+        All ISVANTE watches are encased inside our signature reinforced black velvet gift box, protected by bubble shock-cushioning and a tamper-evident security seal.
+      </p>
+
+    {% elif active_policy == 'returns' %}
+      <h2 style="color: var(--gold-light); font-size: 1.8rem; margin-bottom: 1.5rem;">7-Day Hassle-Free Return & Exchange Policy</h2>
+
+      <h4 style="color: var(--text-primary); margin-top: 1.5rem; margin-bottom: 0.5rem;">1. Eligibility for Exchange</h4>
+      <p>
+        We want you to love your timepiece. If you receive a damaged watch, an incorrect model, or if the timepiece does not meet your expectations, you may request a replacement or return within <strong>7 days</strong> of delivery.
+      </p>
+
+      <h4 style="color: var(--text-primary); margin-top: 1.5rem; margin-bottom: 0.5rem;">2. Conditions</h4>
+      <p>
+        - Timepiece must be completely unworn, unaltered, and with all protective plastics/films intact.<br>
+        - Original ISVANTE luxury box, manual, warranty card, and microfiber cloth must be returned in pristine condition.
+      </p>
+
+      <h4 style="color: var(--text-primary); margin-top: 1.5rem; margin-bottom: 0.5rem;">3. How to Initiate</h4>
+      <p>
+        Contact our concierge desk on WhatsApp at <strong>{{ settings.whatsapp_number or '+92 300 1234567' }}</strong> with your Order Number and brief photos. Our reverse logistics rider will collect the package from your doorstep.
+      </p>
+
+    {% elif active_policy == 'faqs' %}
+      <h2 style="color: var(--gold-light); font-size: 1.8rem; margin-bottom: 1.5rem;">Frequently Asked Questions</h2>
+
+      <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+        <div>
+          <h4 style="color: var(--gold-light); margin-bottom: 0.3rem;">Are ISVANTE watches water resistant?</h4>
+          <p>Yes. Our dress watches are rated at 5 ATM (50 meters splash/rain resistant), and our Diver series is rated up to 20 ATM (200 meters) with screw-down crowns.</p>
+        </div>
+        <div>
+          <h4 style="color: var(--gold-light); margin-bottom: 0.3rem;">Can I inspect the parcel before paying on COD?</h4>
+          <p>Yes. Couriers permit external box verification to ensure the tamper-evident seal is intact before exchanging payment.</p>
+        </div>
+        <div>
+          <h4 style="color: var(--gold-light); margin-bottom: 0.3rem;">What movements are used inside ISVANTE timepieces?</h4>
+          <p>We use authentic Japanese Seiko (NH35A automatic, VK63 mecha-quartz) and Miyota (Citizen Watch Co.) calibers renowned for bulletproof reliability and accurate timekeeping.</p>
+        </div>
+        <div>
+          <h4 style="color: var(--gold-light); margin-bottom: 0.3rem;">Does ISVANTE provide an official warranty in Pakistan?</h4>
+          <p>Every watch carries an official 1-Year ISVANTE Nationwide Warranty stamped on an embossed authenticity card.</p>
+        </div>
+      </div>
+
+    {% elif active_policy == 'privacy' %}
+      <h2 style="color: var(--gold-light); font-size: 1.8rem; margin-bottom: 1.5rem;">Privacy Policy</h2>
+      <p>
+        ISVANTE respects the confidentiality of all patrons. We collect customer names, contact numbers, and delivery addresses solely to fulfill orders and provide shipment tracking notifications. We never sell, lease, or monetize customer data to third-party advertisers. All order transmissions are protected with SSL/TLS encryption.
+      </p>
+
+    {% elif active_policy == 'terms' %}
+      <h2 style="color: var(--gold-light); font-size: 1.8rem; margin-bottom: 1.5rem;">Terms & Conditions</h2>
+      <p>
+        By accessing the ISVANTE portal or placing an order, you agree to comply with our commercial terms. All prices are listed in Pakistani Rupees (PKR) and are inclusive of standard local levies. We reserve the right to verify Cash on Delivery orders via phone or WhatsApp prior to dispatch to prevent fictitious orders.
+      </p>
+    {% endif %}
+
+  </div>
+
+</div>
+{% endblock %}

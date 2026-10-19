@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard | ISVANTE Horology</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/isvante_logo_circle.png') }}">
+  <style>
+    .admin-nav {
+      background: #0d0d12;
+      border-bottom: 1px solid var(--border-subtle);
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .admin-tab-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      font-weight: 600;
+      padding: 0.75rem 1.25rem;
+      cursor: pointer;
+      border-radius: var(--radius-sm);
+      transition: all 0.2s;
+    }
+    .admin-tab-btn.active, .admin-tab-btn:hover {
+      background: rgba(212,175,55,0.12);
+      color: var(--gold-light);
+    }
+    .kpi-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-glass);
+      border-radius: var(--radius-md);
+      padding: 1.5rem;
+    }
+    .kpi-title {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-muted);
+      margin-bottom: 0.5rem;
+    }
+    .kpi-value {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+    .admin-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 0.88rem;
+    }
+    .admin-table th {
+      padding: 1rem;
+      background: #111116;
+      border-bottom: 1px solid var(--border-glass);
+      color: var(--gold-light);
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+    .admin-table td {
+      padding: 1rem;
+      border-bottom: 1px solid var(--border-glass);
+      color: #e5e7eb;
+    }
+    .admin-table tr:hover {
+      background: rgba(255,255,255,0.02);
+    }
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.8);
+      backdrop-filter: blur(8px);
+      z-index: 200;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+    }
+    .modal-backdrop.active {
+      display: flex;
+    }
+    .modal-box {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      max-width: 700px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: 2.5rem;
+    }
+  </style>
+</head>
+<body style="background: #09090c; min-height: 100vh;">
+
+  <!-- Admin Bar -->
+  <header class="admin-nav">
+    <div style="display: flex; align-items: center; gap: 1rem;">
+      <img src="{{ url_for('static', filename='images/isvante_logo_circle.png') }}" alt="ISVANTE" style="width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--border-subtle);">
+      <div>
+        <div style="font-family: var(--font-serif); font-size: 1.15rem; font-weight: 700; letter-spacing: 0.12em;">ISVANTE ATELIER</div>
+        <div style="font-size: 0.7rem; color: var(--gold-light); text-transform: uppercase; letter-spacing: 0.15em;">Command Dashboard</div>
+      </div>
+    </div>
+
+    <div style="display: flex; gap: 0.5rem;">
+      <button class="admin-tab-btn active" onclick="switchAdminTab('overview')">Overview</button>
+      <button class="admin-tab-btn" onclick="switchAdminTab('orders')">Orders</button>
+      <button class="admin-tab-btn" onclick="switchAdminTab('products')">Products</button>
+      <button class="admin-tab-btn" onclick="switchAdminTab('coupons')">Coupons</button>
+      <button class="admin-tab-btn" onclick="switchAdminTab('settings')">Settings</button>
+    </div>
+
+    <div style="display: flex; align-items: center; gap: 1rem;">
+      <a href="/" target="_blank" class="btn btn-outline btn-sm">View Storefront &rarr;</a>
+      <a href="/admin/logout" class="btn btn-sm" style="background: rgba(239,68,68,0.15); color: #fca5a5; border: 1px solid rgba(239,68,68,0.3);">Sign Out</a>
+    </div>
+  </header>
+
+  <main class="container" style="padding-top: 2.5rem; padding-bottom: 5rem;">
+    
+    <!-- 1. OVERVIEW TAB -->
+    <section id="tab-overview" class="admin-section">
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; margin-bottom: 3rem;">
+        <div class="kpi-card">
+          <div class="kpi-title">Total Revenue (PKR)</div>
+          <div class="kpi-value" id="kpi-sales" style="color: var(--gold-light);">Rs. 0</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-title">Total Orders</div>
+          <div class="kpi-value" id="kpi-orders">0</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-title">Pending Orders (COD)</div>
+          <div class="kpi-value" id="kpi-pending" style="color: var(--color-warning);">0</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-title">Active Timepieces</div>
+          <div class="kpi-value" id="kpi-products">0</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-title">Low Stock Alerts</div>
+          <div class="kpi-value" id="kpi-stock" style="color: var(--color-sale);">0</div>
+        </div>
+      </div>
+
+      <div style="background: var(--bg-surface); border: 1px solid var(--border-glass); border-radius: var(--radius-md); padding: 2rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+          <h3 style="font-size: 1.25rem;">Recent Order Stream</h3>
+          <button class="btn btn-outline btn-sm" onclick="switchAdminTab('orders')">View All Orders</button>
+        </div>
+        <div style="overflow-x: auto;">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Order #</th>
+                <th>Client</th>
+                <th>City</th>
+                <th>Total</th>
+                <th>Payment</th>
+                <th>Status</th>
+                <th>Date</th>
+              </tr>
+            </thead>
+            <tbody id="overview-orders-tbody">
+              <!-- Inserted via JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. ORDERS MANAGEMENT TAB -->
+    <section id="tab-orders" class="admin-section" style="display: none;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem;">
+        <h2 style="font-size: 1.8rem;">Orders Directory</h2>
+        
+        <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+          <input type="text" id="order-search-input" class="form-input" placeholder="Search by Order #, Name, Phone..." oninput="loadAdminOrders()" style="width: 260px;">
+          <select id="order-status-filter" class="form-input" onchange="loadAdminOrders()" style="width: 180px;">
+            <option value="all">All Statuses</option>
+            <option value="Pending">Pending</option>
+            <option value="Confirmed">Confirmed</option>
+            <option value="Processing">Processing</option>
+            <option value="Shipped">Shipped</option>
+            <option value="Delivered">Delivered</option>
+            <option value="Cancelled">Cancelled</option>
+          </select>
+        </div>
+      </div>
+
+      <div style="background: var(--bg-surface); border: 1px solid var(--border-glass); border-radius: var(--radius-md); overflow-x: auto;">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>Order #</th>
+              <th>Customer</th>
+              <th>Destination</th>
+              <th>Items</th>
+              <th>Total</th>
+              <th>Method</th>
+              <th>Status</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="all-orders-tbody">
+            <!-- Inserted via JS -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 3. PRODUCTS MANAGEMENT TAB -->
+    <section id="tab-products" class="admin-section" style="display: none;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+        <h2 style="font-size: 1.8rem;">Timepiece Catalog</h2>
+        <button class="btn btn-primary" onclick="openAddProductModal()">+ Add New Timepiece</button>
+      </div>
+
+      <div style="background: var(--bg-surface); border: 1px solid var(--border-glass); border-radius: var(--radius-md); overflow-x: auto;">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>Image</th>
+              <th>Name</th>
+              <th>SKU</th>
+              <th>Category</th>
+              <th>Price</th>
+              <th>Stock</th>
+              <th>Movement</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="admin-products-tbody">
+            <!-- Inserted via JS -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 4. COUPONS TAB -->
+    <section id="tab-coupons" class="admin-section" style="display: none;">
+      <div style="display: grid; grid-template-columns: 1fr 1.5fr; gap: 3rem; align-items: start;">
+        <div style="background: var(--bg-surface); border: 1px solid var(--border-glass); border-radius: var(--radius-md); padding: 2rem;">
+          <h3 style="font-size: 1.3rem; margin-bottom: 1.5rem;">Create Discount Coupon</h3>
+          <form onsubmit="handleCreateCoupon(event)">
+            <div style="display: flex; flex-direction: column; gap: 1rem;">
+              <div>
+                <label style="font-size: 0.8rem; color: var(--text-secondary); display: block; margin-bottom: 0.3rem;">Coupon Code *</label>
+                <input type="text" name="code" class="form-input" placeholder="e.g. EIDLUXURY" style="text-transform: uppercase;" required>
+              </div>
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                <div>
+                  <label style="font-size: 0.8rem; color: var(--text-secondary); display: block; margin-bottom: 0.3rem;">Type</label>
+                  <select name="discount_type" class="form-input">
+                    <option value="percentage">Percentage (%)</option>
+                    <option value="fixed">Fixed PKR (Rs.)</option>
+                  </select>
+                </div>
+                <div>
+                  <label style="font-size: 0.8rem; color: var(--text-secondary); display: block; margin-bottom: 0.3rem;">Value *</label>
+                  <input type="number" name="discount_value" class="form-input" placeholder="e.g. 10 or 1500" required>
+                </div>
+              </div>
+              <div>
+                <label style="font-size: 0.8rem; color: var(--text-secondary); display: block; margin-bottom: 0.3rem;">Min. Order Value (PKR)</label>
+                <input type="number" name="min_order_value" class="form-input" placeholder="0">
+              </div>
+              <button type="submit" class="btn btn-primary" style="margin-top: 0.5rem;">Generate Coupon</button>
+            </div>
+          </form>
+        </div>
+
+        <div style="background: var(--bg-surface); border: 1px solid var(--border-glass); border-radius: var(--radius-md); padding: 2rem;">
+          <h3 style="font-size: 1.3rem; margin-bottom: 1.5rem;">Active Promotional Codes</h3>
+          <div style="overflow-x: auto;">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Code</th>
+                  <th>Discount</th>
+                  <th>Min Order</th>
+                  <th>Redemptions</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="admin-coupons-tbody">
+                <!-- Inserted via JS -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. STORE SETTINGS TAB -->
+    <section id="tab-settings" class="admin-section" style="display: none;">
+      <div style="background: var(--bg-surface); border: 1px solid var(--border-glass); border-radius: var(--radius-md); padding: 2.5rem; max-width: 800px; margin: 0 auto;">
+        <h2 style="font-size: 1.6rem; margin-bottom: 0.5rem;">Store Operations & Pakistan Configuration</h2>
+        <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 2rem;">Configure WhatsApp endpoints, courier charges, and announcement banners in real-time.</p>
+
+        <form onsubmit="handleSaveSettings(event)">
+          <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem;">
+              <div>
+                <label style="font-size: 0.8rem; color: var(--text-secondary); display: block; margin-bottom: 0.3rem;">Central WhatsApp Number (Pakistan +923XXXXXXXXX) *</label>
+                <input type="text" name="whatsapp_number" id="setting-whatsapp" class="form-input" required>
+                <span style="font-size: 0.72rem; color: var(--text-muted);">Controls the floating button, checkout confirm link, and concierge.</span>
+              </div>
+              <div>
+                <label style="font-size: 0.8rem; color: var(--text-secondary); display: block; margin-bottom: 0.3rem;">Contact Phone Number *</label>
+                <input type="text" name="contact_phone" id="setting-phone" class="form-input" required>
+              </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem;">
+              <div>
+                <label style="font-size: 0.8rem; color: var(--text-secondary); display: block; margin-bottom: 0.3rem;">Support Email</label>
+                <input type="email" name="contact_email" id="setting-email" class="form-input" required>
+              </div>
+              <div>
+                <label style="font-size: 0.8rem; color: var(--text-secondary); display: block; margin-bottom: 0.3rem;">Official Logo URL</label>
+                <input type="text" name="logo_url" id="setting-logo" class="form-input" required>
+              </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem;">
+              <div>
+                <label style="font-size: 0.8rem; color: var(--text-secondary); display: block; margin-bottom: 0.3rem;">Standard Delivery Fee (PKR)</label>
+                <input type="number" name="shipping_fee" id="setting-shipping" class="form-input" required>
+              </div>
+              <div>
+                <label style="font-size: 0.8rem; color: var(--text-secondary); display: block; margin-bottom: 0.3rem;">Free Delivery Threshold (PKR)</label>
+                <input type="number" name="free_shipping_threshold" id="setting-threshold" class="form-input" required>
+              </div>
+            </div>
+
+            <div>
+              <label style="font-size: 0.8rem; color: var(--text-secondary); display: block; margin-bottom: 0.3rem;">Top Announcement Bar Banner Text</label>
+              <input type="text" name="announcement_text" id="setting-announcement" class="form-input" required>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem;">
+              <div>
+                <label style="font-size: 0.8rem; color: var(--text-secondary); display: block; margin-bottom: 0.3rem;">Instagram URL</label>
+                <input type="text" name="instagram_url" id="setting-instagram" class="form-input">
+              </div>
+              <div>
+                <label style="font-size: 0.8rem; color: var(--text-secondary); display: block; margin-bottom: 0.3rem;">Facebook URL</label>
+                <input type="text" name="facebook_url" id="setting-facebook" class="form-input">
+              </div>
+              <div>
+                <label style="font-size: 0.8rem; color: var(--text-secondary); display: block; margin-bottom: 0.3rem;">TikTok URL</label>
+                <input type="text" name="tiktok_url" id="setting-tiktok" class="form-input">
+              </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary" style="align-self: flex-start; padding: 0.95rem 2rem;">
+              Save Store Settings
+            </button>
+          </div>
+        </form>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Add Product Modal -->
+  <div id="add-product-modal" class="modal-backdrop">
+    <div class="modal-box">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+        <h3 style="font-size: 1.4rem;">Add Luxury Timepiece</h3>
+        <button class="close-drawer-btn" onclick="closeAddProductModal()">&times;</button>
+      </div>
+
+      <form id="add-product-form" onsubmit="handleCreateProduct(event)">
+        <div style="display: flex; flex-direction: column; gap: 1.25rem;">
+          <div>
+            <label style="font-size: 0.8rem; color: var(--text-secondary); display: block; margin-bottom: 0.3rem;">Watch Model Name *</label>
+            <input type="text" name="name" class="form-input" placeholder="e.g. ISVANTE Imperial Rose" required>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div>
+              <label style="font-size: 0.8rem; color: var(--text-secondary); display: block; margin-bottom: 0.3rem;">Price in PKR *</label>
+              <input type="number" name="price" class="form-input" placeholder="28000" required>
+            </div>
+            <div>
+              <label style="font-size: 0.8rem; color: var(--text-secondary); display: block; margin-bottom: 0.3rem;">Compare-at / Strike Price (PKR)</label>
+              <input type="number" name="compare_at_price" class="form-input" placeholder="33000">
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div>
+              <label style="font-size: 0.8rem; color: var(--text-secondary); display: block; margin-bottom: 0.3rem;">Inventory Stock Count *</label>
+              <input type="number" name="stock" class="form-input" value="15" required>
+            </div>
+            <div>
+              <label style="font-size: 0.8rem; color: var(--text-secondary); display: block; margin-bottom: 0.3rem;">Collection / Category</label>
+              <select name="category_id" id="modal-category-select" class="form-input">
+                <!-- Loaded via JS -->
+              </select>
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div>
+              <label style="font-size: 0.8rem; color: var(--text-secondary); display: block; margin-bottom: 0.3rem;">Caliber / Movement</label>
+              <input type="text" name="movement" class="form-input" value="Japanese Seiko Automatic" required>
+            </div>
+            <div>
+              <label style="font-size: 0.8rem; color: var(--text-secondary); display: block; margin-bottom: 0.3rem;">Case Material</label>
+              <input type="text" name="case_material" class="form-input" value="316L Surgical Stainless Steel" required>
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div>
+              <label style="font-size: 0.8rem; color: var(--text-secondary); display: block; margin-bottom: 0.3rem;">Strap Material</label>
+              <input type="text" name="strap_material" class="form-input" value="Genuine Italian Leather" required>
+            </div>
+            <div>
+              <label style="font-size: 0.8rem; color: var(--text-secondary); display: block; margin-bottom: 0.3rem;">Water Resistance</label>
+              <input type="text" name="water_resistance" class="form-input" value="5 ATM / 50M" required>
+            </div>
+          </div>
+
+          <div>
+            <label style="font-size: 0.8rem; color: var(--text-secondary); display: block; margin-bottom: 0.3rem;">Main Image URL *</label>
+            <input type="text" name="main_image" id="modal-image-url" class="form-input" value="/static/images/chrono_sovereign.jpg" required>
+            <span style="font-size: 0.72rem; color: var(--text-muted);">You can also upload an image directly:</span>
+            <input type="file" id="modal-file-upload" onchange="uploadImageFile(this)" style="font-size: 0.8rem; margin-top: 0.4rem; color: var(--text-secondary);">
+          </div>
+
+          <div>
+            <label style="font-size: 0.8rem; color: var(--text-secondary); display: block; margin-bottom: 0.3rem;">Description</label>
+            <textarea name="description" rows="3" class="form-input" placeholder="Luxury timepiece description..."></textarea>
+          </div>
+
+          <div style="display: flex; gap: 1.5rem; font-size: 0.85rem;">
+            <label style="display: flex; align-items: center; gap: 0.4rem; cursor: pointer;">
+              <input type="checkbox" name="is_featured" checked> Featured
+            </label>
+            <label style="display: flex; align-items: center; gap: 0.4rem; cursor: pointer;">
+              <input type="checkbox" name="is_bestseller"> Best Seller
+            </label>
+            <label style="display: flex; align-items: center; gap: 0.4rem; cursor: pointer;">
+              <input type="checkbox" name="is_new_arrival" checked> New Arrival
+            </label>
+          </div>
+
+          <div style="display: flex; gap: 1rem; margin-top: 1rem;">
+            <button type="submit" class="btn btn-primary" style="flex: 1;">Publish Timepiece</button>
+            <button type="button" class="btn btn-outline" onclick="closeAddProductModal()">Cancel</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Order Status Update Modal -->
+  <div id="order-status-modal" class="modal-backdrop">
+    <div class="modal-box" style="max-width: 500px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+        <h3 style="font-size: 1.3rem;" id="modal-order-title">Update Order</h3>
+        <button class="close-drawer-btn" onclick="closeOrderStatusModal()">&times;</button>
+      </div>
+
+      <form id="order-status-form" onsubmit="handleSaveOrderStatus(event)">
+        <input type="hidden" id="modal-order-id">
+        <div style="display: flex; flex-direction: column; gap: 1.25rem;">
+          <div>
+            <label style="font-size: 0.8rem; color: var(--text-secondary); display: block; margin-bottom: 0.3rem;">Fulfillment Status *</label>
+            <select id="modal-new-status" class="form-input">
+              <option value="Pending">Pending</option>
+              <option value="Confirmed">Confirmed</option>
+              <option value="Processing">Processing</option>
+              <option value="Shipped">Shipped</option>
+              <option value="Delivered">Delivered</option>
+              <option value="Cancelled">Cancelled</option>
+            </select>
+          </div>
+
+          <div>
+            <label style="font-size: 0.8rem; color: var(--text-secondary); display: block; margin-bottom: 0.3rem;">Courier Service</label>
+            <input type="text" id="modal-courier-name" class="form-input" placeholder="e.g. Trax Logistics / TCS Express">
+          </div>
+
+          <div>
+            <label style="font-size: 0.8rem; color: var(--text-secondary); display: block; margin-bottom: 0.3rem;">Courier Tracking CN #</label>
+            <input type="text" id="modal-tracking-num" class="form-input" placeholder="e.g. TRX-9482019">
+          </div>
+
+          <div style="display: flex; gap: 1rem; margin-top: 0.5rem;">
+            <button type="submit" class="btn btn-primary" style="flex: 1;">Update Status</button>
+            <button type="button" class="btn btn-outline" onclick="closeOrderStatusModal()">Cancel</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="toast-container" class="toast-container"></div>
+
+  <!-- Admin JavaScript -->
+  <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/admin.js') }}"></script>
+</body>
+</html>

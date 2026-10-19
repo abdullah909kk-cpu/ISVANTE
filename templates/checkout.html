@@ -1,0 +1,390 @@
+{% extends "base.html" %}
+
+{% block title %}Checkout | ISVANTE Luxury Watches Pakistan{% endblock %}
+
+{% block content %}
+<div class="container" style="padding-top: 3.5rem; padding-bottom: 6rem;">
+  
+  <div style="margin-bottom: 3rem; text-align: center;">
+    <span class="section-subtitle">Secure Dispatch</span>
+    <h1 class="section-title" style="font-size: 2.5rem;">Pakistan Checkout</h1>
+    <p>Please enter your delivery destination. Cash on Delivery is available across all cities and towns.</p>
+  </div>
+
+  <div id="checkout-main-content">
+    <form id="checkout-form" onsubmit="handlePlaceOrder(event)">
+      <div style="display: grid; grid-template-columns: 1.5fr 1fr; gap: 3.5rem; align-items: start;" class="checkout-grid">
+        
+        <!-- Left: Customer Information & Delivery Address -->
+        <div>
+          
+          <!-- Contact Details -->
+          <div style="background: var(--bg-surface); border: 1px solid var(--border-glass); border-radius: var(--radius-md); padding: 2rem; margin-bottom: 2rem;">
+            <h3 style="font-size: 1.25rem; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.6rem;">
+              <span style="width: 28px; height: 28px; background: var(--gold-primary); color: #000; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.85rem; font-weight: 700;">1</span>
+              Customer Contact Details
+            </h3>
+
+            <div style="display: flex; flex-direction: column; gap: 1.25rem;">
+              <div>
+                <label style="font-size: 0.85rem; color: var(--text-secondary); display: block; margin-bottom: 0.4rem;">Full Name *</label>
+                <input type="text" name="customer_name" class="form-input" placeholder="e.g. Muhammad Hamza" required>
+              </div>
+
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                <div>
+                  <label style="font-size: 0.85rem; color: var(--text-secondary); display: block; margin-bottom: 0.4rem;">Mobile Phone Number *</label>
+                  <input type="tel" name="customer_phone" id="customer_phone" class="form-input" placeholder="0300-1234567" required pattern="^(03|\+923)[0-9]{9}$" title="Valid Pakistani number: 03XXXXXXXXX">
+                  <span style="font-size: 0.72rem; color: var(--text-muted); margin-top: 0.2rem; display: block;">Rider will call this number prior to delivery.</span>
+                </div>
+
+                <div>
+                  <label style="font-size: 0.85rem; color: var(--text-secondary); display: block; margin-bottom: 0.4rem;">WhatsApp Number *</label>
+                  <input type="tel" name="customer_whatsapp" id="customer_whatsapp" class="form-input" placeholder="0300-1234567" required>
+                  <label style="display: flex; align-items: center; gap: 0.4rem; font-size: 0.75rem; color: var(--gold-light); margin-top: 0.35rem; cursor: pointer;">
+                    <input type="checkbox" id="same-whatsapp-check" checked onchange="toggleSamePhone()"> Same as mobile number
+                  </label>
+                </div>
+              </div>
+
+              <div>
+                <label style="font-size: 0.85rem; color: var(--text-secondary); display: block; margin-bottom: 0.4rem;">Email Address (For Invoice & Tracking Updates) *</label>
+                <input type="email" name="customer_email" class="form-input" placeholder="hamza@example.com" required>
+              </div>
+            </div>
+          </div>
+
+          <!-- Shipping Destination -->
+          <div style="background: var(--bg-surface); border: 1px solid var(--border-glass); border-radius: var(--radius-md); padding: 2rem; margin-bottom: 2rem;">
+            <h3 style="font-size: 1.25rem; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.6rem;">
+              <span style="width: 28px; height: 28px; background: var(--gold-primary); color: #000; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.85rem; font-weight: 700;">2</span>
+              Delivery Address in Pakistan
+            </h3>
+
+            <div style="display: flex; flex-direction: column; gap: 1.25rem;">
+              <div>
+                <label style="font-size: 0.85rem; color: var(--text-secondary); display: block; margin-bottom: 0.4rem;">Complete Street Address (House/Flat #, Street, Phase/Sector) *</label>
+                <textarea name="address" rows="3" class="form-input" placeholder="House # 12-A, Street 4, Sector F-8/3 or Phase 5 DHA" required></textarea>
+              </div>
+
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                <div>
+                  <label style="font-size: 0.85rem; color: var(--text-secondary); display: block; margin-bottom: 0.4rem;">City *</label>
+                  <select name="city" class="form-input" required>
+                    <option value="">Select Your City</option>
+                    <option value="Lahore">Lahore</option>
+                    <option value="Karachi">Karachi</option>
+                    <option value="Islamabad">Islamabad</option>
+                    <option value="Rawalpindi">Rawalpindi</option>
+                    <option value="Faisalabad">Faisalabad</option>
+                    <option value="Multan">Multan</option>
+                    <option value="Peshawar">Peshawar</option>
+                    <option value="Quetta">Quetta</option>
+                    <option value="Sialkot">Sialkot</option>
+                    <option value="Gujranwala">Gujranwala</option>
+                    <option value="Hyderabad">Hyderabad</option>
+                    <option value="Abbottabad">Abbottabad</option>
+                    <option value="Bahawalpur">Bahawalpur</option>
+                    <option value="Sargodha">Sargodha</option>
+                    <option value="Sukkur">Sukkur</option>
+                    <option value="Other">Other City / Town</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label style="font-size: 0.85rem; color: var(--text-secondary); display: block; margin-bottom: 0.4rem;">Province *</label>
+                  <select name="province" class="form-input" required>
+                    <option value="Punjab">Punjab</option>
+                    <option value="Sindh">Sindh</option>
+                    <option value="Islamabad Capital Territory">Islamabad Capital Territory</option>
+                    <option value="Khyber Pakhtunkhwa">Khyber Pakhtunkhwa (KPK)</option>
+                    <option value="Balochistan">Balochistan</option>
+                    <option value="Azad Jammu & Kashmir">Azad Jammu & Kashmir (AJK)</option>
+                    <option value="Gilgit-Baltistan">Gilgit-Baltistan</option>
+                  </select>
+                </div>
+              </div>
+
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                <div>
+                  <label style="font-size: 0.85rem; color: var(--text-secondary); display: block; margin-bottom: 0.4rem;">Postal / ZIP Code (Optional)</label>
+                  <input type="text" name="postal_code" class="form-input" placeholder="e.g. 54000">
+                </div>
+                <div>
+                  <label style="font-size: 0.85rem; color: var(--text-secondary); display: block; margin-bottom: 0.4rem;">Nearest Landmark (Optional)</label>
+                  <input type="text" name="landmark" class="form-input" placeholder="e.g. Near Shell Pump">
+                </div>
+              </div>
+
+              <div>
+                <label style="font-size: 0.85rem; color: var(--text-secondary); display: block; margin-bottom: 0.4rem;">Order Notes / Delivery Instructions</label>
+                <input type="text" name="notes" class="form-input" placeholder="e.g. Please deliver between 2 PM and 6 PM">
+              </div>
+            </div>
+          </div>
+
+          <!-- Payment Method Selection -->
+          <div style="background: var(--bg-surface); border: 1px solid var(--border-glass); border-radius: var(--radius-md); padding: 2rem;">
+            <h3 style="font-size: 1.25rem; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.6rem;">
+              <span style="width: 28px; height: 28px; background: var(--gold-primary); color: #000; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.85rem; font-weight: 700;">3</span>
+              Payment Method
+            </h3>
+
+            <div style="display: flex; flex-direction: column; gap: 1rem;">
+              
+              <!-- Option 1: Cash on Delivery (COD) -->
+              <label style="display: flex; align-items: flex-start; gap: 1rem; padding: 1.25rem; border: 2px solid var(--gold-primary); background: rgba(212, 175, 55, 0.08); border-radius: var(--radius-md); cursor: pointer;">
+                <input type="radio" name="payment_method" value="cod" checked style="margin-top: 0.3rem;" onchange="handlePaymentChange(this.value)">
+                <div>
+                  <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.3rem;">
+                    <strong style="color: var(--text-primary); font-size: 1.05rem;">Cash on Delivery (COD)</strong>
+                    <span class="badge badge-new" style="background: var(--color-success); color: #fff;">RECOMMENDED</span>
+                  </div>
+                  <p style="font-size: 0.82rem; color: var(--text-secondary); margin: 0;">
+                    Pay cash directly to the courier agent when your watch arrives at your doorstep. Zero advance payment required.
+                  </p>
+                </div>
+              </label>
+
+              <!-- Option 2: Online Payment / Bank Transfer / Digital Wallets -->
+              <label style="display: flex; align-items: flex-start; gap: 1rem; padding: 1.25rem; border: 1px solid var(--border-glass); background: var(--bg-card); border-radius: var(--radius-md); cursor: pointer;">
+                <input type="radio" name="payment_method" value="online" style="margin-top: 0.3rem;" onchange="handlePaymentChange(this.value)">
+                <div>
+                  <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.3rem;">
+                    <strong style="color: var(--text-primary); font-size: 1.05rem;">Online Payment / Direct Bank Transfer</strong>
+                    <span style="font-size: 0.7rem; color: var(--gold-light); border: 1px solid var(--border-subtle); padding: 0.15rem 0.4rem; border-radius: 3px;">Easypaisa / JazzCash / Raast</span>
+                  </div>
+                  <p style="font-size: 0.82rem; color: var(--text-secondary); margin: 0;">
+                    Instant electronic payment or direct bank deposit into ISVANTE official business account.
+                  </p>
+                  <div id="online-payment-instructions" style="display: none; margin-top: 1rem; padding: 1rem; background: #0c0c10; border: 1px solid var(--border-glass); border-radius: var(--radius-sm); font-size: 0.8rem; color: #d1d5db;">
+                    <strong>ISVANTE Corporate Bank Details:</strong><br>
+                    Bank: Meezan Bank Ltd.<br>
+                    Title: ISVANTE LUXURY HOROLOGY<br>
+                    Account / IBAN: PK42MEZN00012345678901<br>
+                    Raast ID: 03001234567<br>
+                    <em>Our concierge team will verify your transfer reference via WhatsApp immediately after order placement.</em>
+                  </div>
+                </div>
+              </label>
+
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Right: Order Summary Sidebar -->
+        <div style="position: sticky; top: 100px;">
+          <div style="background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 2rem; box-shadow: var(--shadow-lg);">
+            <h3 style="font-size: 1.3rem; margin-bottom: 1.5rem;">Your Order Summary</h3>
+
+            <div id="checkout-items-list" style="display: flex; flex-direction: column; gap: 1rem; margin-bottom: 1.5rem; max-height: 280px; overflow-y: auto;">
+              <!-- Items loaded via JS -->
+            </div>
+
+            <!-- Coupon Code Apply -->
+            <div style="margin-bottom: 1.5rem; padding-top: 1rem; border-top: 1px solid var(--border-glass);">
+              <label style="font-size: 0.8rem; color: var(--text-secondary); display: block; margin-bottom: 0.4rem;">Have a Promo Coupon?</label>
+              <div style="display: flex; gap: 0.5rem;">
+                <input type="text" id="checkout-coupon-code" class="form-input" placeholder="e.g. ISVANTE10" style="text-transform: uppercase;">
+                <button type="button" class="btn btn-outline btn-sm" onclick="applyCheckoutCoupon()">Apply</button>
+              </div>
+            </div>
+
+            <!-- Totals Breakdown -->
+            <div style="display: flex; flex-direction: column; gap: 0.75rem; font-size: 0.92rem; border-top: 1px solid var(--border-glass); padding-top: 1.25rem; margin-bottom: 1.5rem;">
+              <div style="display: flex; justify-content: space-between;">
+                <span style="color: var(--text-secondary);">Subtotal</span>
+                <span id="checkout-subtotal" style="font-weight: 600;">Rs. 0</span>
+              </div>
+
+              <div style="display: flex; justify-content: space-between;">
+                <span style="color: var(--text-secondary);">Nationwide Delivery</span>
+                <span id="checkout-shipping">Rs. 250</span>
+              </div>
+
+              <div id="checkout-discount-row" style="display: none; justify-content: space-between; color: var(--color-success);">
+                <span>Discount</span>
+                <span id="checkout-discount">-Rs. 0</span>
+              </div>
+
+              <div style="border-top: 1px solid var(--border-glass); padding-top: 1rem; display: flex; justify-content: space-between; font-size: 1.4rem; font-weight: 700;">
+                <span>Total Amount</span>
+                <span id="checkout-total" style="color: var(--gold-light);">Rs. 0</span>
+              </div>
+            </div>
+
+            <button type="submit" id="place-order-submit-btn" class="btn btn-primary btn-block" style="padding: 1.1rem; font-size: 1rem;">
+              Place Cash on Delivery Order
+            </button>
+
+            <div style="display: flex; align-items: center; justify-content: center; gap: 0.5rem; margin-top: 1rem; font-size: 0.75rem; color: var(--text-muted);">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+              <span>100% Encrypted & Authenticated Pakistan Delivery</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </form>
+  </div>
+
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  let activeCoupon = null;
+
+  function toggleSamePhone() {
+    const isSame = document.getElementById('same-whatsapp-check').checked;
+    const phone = document.getElementById('customer_phone').value;
+    const wa = document.getElementById('customer_whatsapp');
+    if (isSame) {
+      wa.value = phone;
+      wa.readOnly = true;
+    } else {
+      wa.readOnly = false;
+    }
+  }
+
+  document.getElementById('customer_phone').addEventListener('input', () => {
+    if (document.getElementById('same-whatsapp-check').checked) {
+      document.getElementById('customer_whatsapp').value = document.getElementById('customer_phone').value;
+    }
+  });
+
+  function handlePaymentChange(val) {
+    const btn = document.getElementById('place-order-submit-btn');
+    const onlineInfo = document.getElementById('online-payment-instructions');
+    if (val === 'cod') {
+      btn.textContent = 'Place Cash on Delivery Order';
+      if (onlineInfo) onlineInfo.style.display = 'none';
+    } else {
+      btn.textContent = 'Confirm Online Order';
+      if (onlineInfo) onlineInfo.style.display = 'block';
+    }
+  }
+
+  function renderCheckoutSummary() {
+    const cart = ISVANTE.getCart();
+    if (cart.length === 0) {
+      window.location.href = '/shop';
+      return;
+    }
+
+    const itemsContainer = document.getElementById('checkout-items-list');
+    itemsContainer.innerHTML = cart.map(i => `
+      <div style="display: flex; gap: 0.75rem; align-items: center;">
+        <img src="${i.image}" alt="${i.name}" style="width: 50px; height: 50px; object-fit: cover; border-radius: var(--radius-sm); border: 1px solid var(--border-glass);">
+        <div style="flex: 1;">
+          <div style="font-size: 0.85rem; font-weight: 600;">${i.name}</div>
+          <div style="font-size: 0.75rem; color: var(--text-muted);">Qty: ${i.quantity} &times; ${ISVANTE.formatPKR(i.price)}</div>
+        </div>
+        <div style="font-weight: 600; font-size: 0.88rem; color: var(--gold-light);">
+          ${ISVANTE.formatPKR(i.price * i.quantity)}
+        </div>
+      </div>
+    `).join('');
+
+    const { subtotal, shippingFee } = ISVANTE.calculateCartTotals();
+    let discountVal = 0;
+    if (activeCoupon && activeCoupon.valid) {
+      discountVal = activeCoupon.discount_amount;
+    }
+    const total = Math.max(0, (subtotal - discountVal) + shippingFee);
+
+    document.getElementById('checkout-subtotal').textContent = ISVANTE.formatPKR(subtotal);
+    document.getElementById('checkout-shipping').innerHTML = shippingFee === 0 ? '<strong style="color: var(--color-success);">FREE</strong>' : ISVANTE.formatPKR(shippingFee);
+    
+    const discRow = document.getElementById('checkout-discount-row');
+    if (discountVal > 0) {
+      discRow.style.display = 'flex';
+      document.getElementById('checkout-discount').textContent = `-${ISVANTE.formatPKR(discountVal)}`;
+    } else {
+      discRow.style.display = 'none';
+    }
+
+    document.getElementById('checkout-total').textContent = ISVANTE.formatPKR(total);
+  }
+
+  async function applyCheckoutCoupon() {
+    const code = document.getElementById('checkout-coupon-code').value.trim();
+    if (!code) {
+      ISVANTE.showToast('Please type a coupon code.', 'error');
+      return;
+    }
+    const { subtotal } = ISVANTE.calculateCartTotals();
+
+    try {
+      const res = await fetch('/api/coupons/validate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ code: code, subtotal: subtotal })
+      });
+      const data = await res.json();
+      if (data.valid) {
+        activeCoupon = data;
+        ISVANTE.showToast(data.message);
+        renderCheckoutSummary();
+      } else {
+        ISVANTE.showToast(data.message, 'error');
+      }
+    } catch (e) {
+      ISVANTE.showToast('Coupon validation failed.', 'error');
+    }
+  }
+
+  async function handlePlaceOrder(e) {
+    e.preventDefault();
+    const form = e.target;
+    const submitBtn = document.getElementById('place-order-submit-btn');
+    const originalText = submitBtn.textContent;
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Confirming Order with Atelier...';
+
+    const cart = ISVANTE.getCart();
+    const payload = {
+      customer_name: form.customer_name.value.trim(),
+      customer_phone: form.customer_phone.value.trim(),
+      customer_whatsapp: form.customer_whatsapp.value.trim(),
+      customer_email: form.customer_email.value.trim(),
+      address: form.address.value.trim(),
+      city: form.city.value,
+      province: form.province.value,
+      postal_code: form.postal_code.value.trim(),
+      notes: form.notes.value.trim(),
+      payment_method: form.payment_method.value,
+      coupon_code: activeCoupon ? activeCoupon.code : null,
+      items: cart
+    };
+
+    try {
+      const res = await fetch('/api/orders', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      const data = await res.json();
+
+      if (data.success) {
+        ISVANTE.clearCart();
+        window.location.href = `/order-confirmation/${data.order.order_number}`;
+      } else {
+        ISVANTE.showToast(data.error || 'Failed to place order. Please review your details.', 'error');
+        submitBtn.disabled = false;
+        submitBtn.textContent = originalText;
+      }
+    } catch (err) {
+      ISVANTE.showToast('Network error while placing order. Please try again.', 'error');
+      submitBtn.disabled = false;
+      submitBtn.textContent = originalText;
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    toggleSamePhone();
+    renderCheckoutSummary();
+  });
+</script>
+{% endblock %}

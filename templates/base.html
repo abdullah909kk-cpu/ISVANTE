@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}ISVANTE | Crafted to Stand Out — Luxury Watches in Pakistan{% endblock %}</title>
+  <meta name="description" content="{% block meta_description %}Discover ISVANTE, Pakistan's premier luxury watch brand. Featuring precision Japanese & Swiss movements, scratch-resistant sapphire crystal, 316L stainless steel, and Cash on Delivery across Pakistan.{% endblock %}">
+  
+  <!-- Open Graph / SEO -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="ISVANTE — Crafted to Stand Out">
+  <meta property="og:description" content="Luxury timepieces engineered for sophistication. Free nationwide delivery on qualifying orders. Cash on Delivery available across Pakistan.">
+  <meta property="og:image" content="{{ url_for('static', filename='images/isvante_logo_circle.png', _external=True) }}">
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/isvante_logo_circle.png') }}">
+  <link rel="apple-touch-icon" href="{{ url_for('static', filename='images/isvante_logo_circle.png') }}">
+  
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  {% block extra_css %}{% endblock %}
+</head>
+<body>
+
+  <!-- Announcement Bar -->
+  <aside class="announcement-bar" role="region" aria-label="Announcement">
+    <span class="announcement-badge">PAKISTAN LAUNCH</span>
+    <span>{{ settings.announcement_text or "Cash on Delivery Available Across Pakistan | Free Nationwide Delivery on Orders Above Rs. 5,000" }}</span>
+  </aside>
+
+  <!-- Sticky Navigation Header -->
+  <header class="site-header" id="site-header">
+    <div class="container">
+      <nav class="nav-inner" aria-label="Main Navigation">
+        
+        <!-- Brand Logo -->
+        <a href="/" class="brand-logo-link" aria-label="ISVANTE Homepage">
+          <img src="{{ settings.logo_url or url_for('static', filename='images/isvante_logo_circle.png') }}" 
+               alt="ISVANTE Luxury Watches Official Logo" 
+               class="brand-logo-img">
+          <div class="brand-title-wrap">
+            <span class="brand-title-name">ISVANTE</span>
+            <span class="brand-title-tagline">Crafted to Stand Out</span>
+          </div>
+        </a>
+
+        <!-- Desktop Navigation Menu -->
+        <ul class="nav-menu">
+          <li><a href="/" class="nav-link {% if request.path == '/' %}active{% endif %}">Home</a></li>
+          <li><a href="/shop" class="nav-link {% if request.path == '/shop' %}active{% endif %}">Shop</a></li>
+          <li><a href="/shop?category=chronograph" class="nav-link">Chronograph</a></li>
+          <li><a href="/shop?category=luxury" class="nav-link">Luxury</a></li>
+          <li><a href="/about" class="nav-link {% if request.path == '/about' %}active{% endif %}">About Us</a></li>
+          <li><a href="/contact" class="nav-link {% if request.path == '/contact' %}active{% endif %}">Contact</a></li>
+          <li><a href="/track" class="nav-link {% if request.path == '/track' %}active{% endif %}">Track Order</a></li>
+        </ul>
+
+        <!-- Navigation Action Buttons -->
+        <div class="nav-actions">
+          <a href="/shop" class="icon-btn" title="Search Timepieces" aria-label="Search">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          </a>
+          
+          <button class="icon-btn cart-drawer-trigger" id="cart-drawer-toggle" title="Shopping Cart" aria-label="Shopping Cart">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+            <span class="badge-count cart-count-badge" style="display: none;">0</span>
+          </button>
+
+          {% if is_admin_logged_in %}
+            <a href="/admin" class="btn btn-outline btn-sm" style="padding: 0.4rem 0.8rem; font-size: 0.72rem;">Admin Panel</a>
+          {% endif %}
+
+          <button class="icon-btn mobile-menu-btn" id="mobile-menu-toggle" aria-label="Open mobile navigation menu">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+          </button>
+        </div>
+
+      </nav>
+    </div>
+  </header>
+
+  <!-- Mobile Drawer Menu -->
+  <div id="mobile-menu-backdrop" class="drawer-backdrop"></div>
+  <aside id="mobile-menu-drawer" class="cart-drawer" style="right: auto; left: 0; transform: translateX(-100%);">
+    <div class="drawer-header">
+      <div class="brand-title-wrap">
+        <span class="brand-title-name" style="font-size: 1.25rem;">ISVANTE</span>
+        <span class="brand-title-tagline">Luxury Horology</span>
+      </div>
+      <button class="close-drawer-btn" id="close-mobile-menu" aria-label="Close Navigation Menu">&times;</button>
+    </div>
+    <div style="padding: 2rem 1.5rem; display: flex; flex-direction: column; gap: 1.5rem;">
+      <a href="/" class="nav-link" style="font-size: 1.1rem;">Home</a>
+      <a href="/shop" class="nav-link" style="font-size: 1.1rem;">Shop All Watches</a>
+      <a href="/shop?category=chronograph" class="nav-link" style="font-size: 1.1rem;">Chronograph Collection</a>
+      <a href="/shop?category=luxury" class="nav-link" style="font-size: 1.1rem;">Luxury Collection</a>
+      <a href="/shop?category=classic" class="nav-link" style="font-size: 1.1rem;">Classic Dress Watches</a>
+      <a href="/shop?category=minimal" class="nav-link" style="font-size: 1.1rem;">Minimalist Collection</a>
+      <a href="/shop?category=new-arrivals" class="nav-link" style="font-size: 1.1rem;">New Arrivals</a>
+      <hr style="border: none; border-top: 1px solid var(--border-glass);">
+      <a href="/about" class="nav-link">Our Brand Story</a>
+      <a href="/track" class="nav-link">Track Your Order</a>
+      <a href="/contact" class="nav-link">Customer Concierge</a>
+      <a href="/policies/shipping" class="nav-link">Delivery & COD Across Pakistan</a>
+      <a href="/policies/returns" class="nav-link">7-Day Return Policy</a>
+    </div>
+  </aside>
+
+  <!-- Slide-in Cart Drawer -->
+  <div id="drawer-backdrop" class="drawer-backdrop"></div>
+  <aside id="cart-drawer" class="cart-drawer" aria-label="Shopping Cart Drawer">
+    <div class="drawer-header">
+      <h3>Your Collection</h3>
+      <button class="close-drawer-btn" id="close-drawer-btn" aria-label="Close Cart">&times;</button>
+    </div>
+
+    <!-- Free Delivery Progress Bar -->
+    <div class="shipping-progress-wrap">
+      <div class="shipping-progress-text" id="shipping-progress-text">
+        Add <strong>Rs. 5,000</strong> for <strong>Free Nationwide Delivery</strong>.
+      </div>
+      <div class="progress-bar-track">
+        <div class="progress-bar-fill" id="shipping-progress-fill" style="width: 0%;"></div>
+      </div>
+    </div>
+
+    <!-- Items container -->
+    <div class="drawer-items" id="drawer-items">
+      <!-- Items dynamically populated via JS -->
+    </div>
+
+    <!-- Drawer Footer -->
+    <div class="drawer-footer">
+      <div class="summary-row">
+        <span style="color: var(--text-secondary);">Subtotal</span>
+        <span id="drawer-subtotal" style="font-weight: 600;">Rs. 0</span>
+      </div>
+      <div class="summary-row total-row">
+        <span>Estimated Total</span>
+        <span id="drawer-total" style="color: var(--gold-primary);">Rs. 0</span>
+      </div>
+      <p style="font-size: 0.75rem; color: var(--text-muted); margin: 0.5rem 0 1.25rem;">
+        Cash on Delivery Available Across Pakistan • No Hidden Charges
+      </p>
+      <a href="/checkout" class="btn btn-primary btn-block">
+        Proceed to Checkout
+      </a>
+      <a href="/cart" class="btn btn-outline btn-block btn-sm" style="margin-top: 0.6rem;">
+        View Full Cart
+      </a>
+    </div>
+  </aside>
+
+  <!-- Main Content Block -->
+  <main>
+    {% block content %}{% endblock %}
+  </main>
+
+  <!-- Floating WhatsApp Concierge Button -->
+  <a href="https://wa.me/{{ (settings.whatsapp_number or '+923001234567')|replace('+', '')|replace(' ', '') }}?text=Hello%20ISVANTE,%20I%20am%20interested%20in%20your%20luxury%20watches." 
+     target="_blank" 
+     rel="noopener noreferrer" 
+     class="floating-whatsapp"
+     aria-label="Chat with ISVANTE Support on WhatsApp">
+    <span class="whatsapp-pulse-dot"></span>
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.816 9.816 0 0 0 12.04 2zm.01 18.04c-1.48 0-2.93-.4-4.2-1.15l-.3-.18-3.12.82.83-3.04-.2-.31c-.82-1.31-1.26-2.83-1.26-4.4 0-4.51 3.67-8.18 8.18-8.18 2.19 0 4.24.85 5.79 2.4 1.54 1.55 2.4 3.6 2.4 5.79 0 4.51-3.67 8.25-8.42 8.25zm4.49-6.14c-.25-.12-1.47-.72-1.7-.81-.23-.08-.39-.12-.56.12-.17.25-.64.81-.79.97-.14.17-.29.19-.54.06-.25-.12-1.05-.39-1.99-1.23-.74-.66-1.23-1.47-1.38-1.72-.14-.25-.02-.38.11-.51.11-.11.25-.29.37-.43.12-.14.17-.25.25-.41.08-.17.04-.31-.02-.43s-.56-1.34-.76-1.84c-.2-.48-.41-.42-.56-.43h-.48c-.17 0-.43.06-.66.31-.22.25-.86.84-.86 2.05 0 1.21.88 2.38 1 2.54.12.17 1.73 2.64 4.19 3.7.59.25 1.05.41 1.41.52.59.19 1.13.16 1.56.1.48-.07 1.47-.6 1.68-1.18.21-.58.21-1.07.15-1.18-.06-.11-.22-.17-.47-.3z"/>
+    </svg>
+    <span>WhatsApp Concierge</span>
+  </a>
+
+  <!-- Floating AI Concierge Chatbot -->
+  <button id="chatbot-toggle-btn" class="floating-chatbot-toggle" aria-label="Open AI Concierge Chatbot">
+    <span class="chatbot-pill-label">ISVANTE AI Concierge</span>
+    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+    </svg>
+  </button>
+
+  <aside id="chatbot-modal" class="chatbot-modal" aria-label="AI Concierge Modal">
+    <div class="chatbot-header">
+      <div class="chatbot-brand">
+        <img src="{{ settings.logo_url or url_for('static', filename='images/isvante_logo_circle.png') }}" alt="ISVANTE" class="chatbot-avatar">
+        <div>
+          <h4 style="font-size: 0.95rem; line-height: 1.1;">ISVANTE Concierge</h4>
+          <span class="chatbot-status-text">
+            <span style="width: 6px; height: 6px; background: var(--color-success); border-radius: 50%;"></span>
+            Online • Horology Assistant
+          </span>
+        </div>
+      </div>
+      <button id="chatbot-close-btn" class="close-drawer-btn" style="font-size: 1.25rem;">&times;</button>
+    </div>
+
+    <div class="chat-messages" id="chat-messages">
+      <!-- Conversation bubbles dynamically inserted -->
+    </div>
+
+    <div class="chat-quick-replies">
+      <button class="quick-chip" data-query="Do you offer Cash on Delivery in Pakistan?">COD in Pakistan?</button>
+      <button class="quick-chip" data-query="Show me available watch models and prices">Explore Watches</button>
+      <button class="quick-chip" data-query="What is the delivery time across Pakistan?">Delivery Time?</button>
+      <button class="quick-chip" data-query="What warranty is included?">1-Year Warranty?</button>
+    </div>
+
+    <form class="chat-input-bar" id="chat-form">
+      <input type="text" id="chat-input" class="chat-input" placeholder="Inquire about watches, specs, COD..." autocomplete="off">
+      <button type="submit" class="chat-send-btn" aria-label="Send Message">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+      </button>
+    </form>
+  </aside>
+
+  <!-- Site Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        
+        <!-- Brand Summary -->
+        <div class="footer-brand">
+          <a href="/" class="brand-logo-link">
+            <img src="{{ settings.logo_url or url_for('static', filename='images/isvante_logo_circle.png') }}" alt="ISVANTE Logo" class="brand-logo-img">
+            <div class="brand-title-wrap">
+              <span class="brand-title-name" style="font-size: 1.35rem;">ISVANTE</span>
+              <span class="brand-title-tagline">{{ settings.tagline or "Crafted to Stand Out" }}</span>
+            </div>
+          </a>
+          <p>
+            A premier Pakistani luxury horology brand dedicated to exceptional craftsmanship, sapphire crystals, surgical steel, and timeless elegance for discerning individuals.
+          </p>
+          <div class="social-links">
+            <a href="{{ settings.instagram_url or '#' }}" target="_blank" rel="noopener noreferrer" class="social-link" title="Instagram" aria-label="Instagram">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+            </a>
+            <a href="{{ settings.facebook_url or '#' }}" target="_blank" rel="noopener noreferrer" class="social-link" title="Facebook" aria-label="Facebook">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+            </a>
+            <a href="{{ settings.tiktok_url or '#' }}" target="_blank" rel="noopener noreferrer" class="social-link" title="TikTok" aria-label="TikTok">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.24 1.07-.14 1.61.24 1.64 1.82 2.89 3.5 2.77 1.81-.03 3.29-1.54 3.34-3.35.03-4.71.01-9.42.02-14.13z"/></svg>
+            </a>
+            <a href="https://wa.me/{{ (settings.whatsapp_number or '+923001234567')|replace('+', '')|replace(' ', '') }}" target="_blank" rel="noopener noreferrer" class="social-link" title="WhatsApp" aria-label="WhatsApp">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.816 9.816 0 0 0 12.04 2z"/></svg>
+            </a>
+          </div>
+        </div>
+
+        <!-- Collections -->
+        <div class="footer-col">
+          <h5>Collections</h5>
+          <ul class="footer-links">
+            <li><a href="/shop?category=chronograph">Chronograph</a></li>
+            <li><a href="/shop?category=luxury">Prestige Luxury</a></li>
+            <li><a href="/shop?category=classic">Heritage Classic</a></li>
+            <li><a href="/shop?category=minimal">Aurelia Minimal</a></li>
+            <li><a href="/shop?category=everyday">Everyday Diver</a></li>
+            <li><a href="/shop?category=new-arrivals">New Arrivals</a></li>
+          </ul>
+        </div>
+
+        <!-- Quick Links -->
+        <div class="footer-col">
+          <h5>Client Care</h5>
+          <ul class="footer-links">
+            <li><a href="/track">Track Order</a></li>
+            <li><a href="/policies/shipping">Shipping & COD</a></li>
+            <li><a href="/policies/returns">7-Day Exchanges</a></li>
+            <li><a href="/policies/faqs">FAQs</a></li>
+            <li><a href="/contact">Concierge Support</a></li>
+          </ul>
+        </div>
+
+        <!-- Legal -->
+        <div class="footer-col">
+          <h5>Legal</h5>
+          <ul class="footer-links">
+            <li><a href="/policies/privacy">Privacy Policy</a></li>
+            <li><a href="/policies/terms">Terms & Conditions</a></li>
+            <li><a href="/about">Authenticity Promise</a></li>
+            <li><a href="/admin/login">Staff Portal</a></li>
+          </ul>
+        </div>
+
+        <!-- Trust Badges & Payments -->
+        <div class="footer-col">
+          <h5>Pakistan Dispatch</h5>
+          <p style="font-size: 0.82rem; margin-bottom: 0.8rem;">
+            Serving Karachi, Lahore, Islamabad, Rawalpindi, Faisalabad, Peshawar, Multan, Quetta, and nationwide.
+          </p>
+          <div style="background: rgba(255,255,255,0.04); border: 1px solid var(--border-glass); border-radius: var(--radius-sm); padding: 0.8rem; font-size: 0.78rem;">
+            <div style="color: var(--gold-light); font-weight: 600; margin-bottom: 0.3rem;">Cash on Delivery (COD)</div>
+            <div style="color: var(--text-muted);">Inspection upon arrival • Trax & TCS Express Nationwide Delivery</div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="footer-bottom">
+        <div>&copy; 2026 ISVANTE Horology Pakistan. All rights reserved. CRAFTED TO STAND OUT.</div>
+        <div style="display: flex; gap: 1.5rem;">
+          <span>PKR (₨)</span>
+          <span>English (اردو Coming Soon)</span>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/chatbot.js') }}"></script>
+  {% block extra_js %}{% endblock %}
+</body>
+</html>
